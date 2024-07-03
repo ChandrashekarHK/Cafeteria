@@ -63,12 +63,15 @@ public class ChefClientController {
                     break;
                 case 4:
                     jsonRequest.put("chefAction", "VIEW_ROLLOUT_MENU");
+
                     break;
                 case 5:
                     jsonRequest.put("chefAction", "VIEW_FINAL_VOTING");
                     break;
                 case 6:
                     jsonRequest.put("chefAction", "SEND_NOTIFICATION");
+                    String message = ConsoleReadUtils.getStringInput("Enter the message by mentioning the DATE of Rollout");
+                    jsonRequest.put("message", message);
                     break;
                 case 7 :
                     exit = true;

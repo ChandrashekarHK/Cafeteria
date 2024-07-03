@@ -53,7 +53,7 @@ public class ConsolePrintUtils {
                         ", Name: " + menu.getString("name") +
                         ", Rating: " + menu.getDouble("averageRating") +
                         ", Price: " + menu.getBigDecimal("price"));
-//                        ", Comment: " + menu.getString("framedSentiment")
+
             }
         }
 
@@ -62,7 +62,7 @@ public class ConsolePrintUtils {
             for (int i = 0; i < notificationList.length(); i++) {
                 JSONObject notification = notificationList.getJSONObject(i);
                 System.out.println("Message: " + notification.getString("message") +
-                        ",  Date: " + notification.getString("notificationDate"));
+                        ",  Date: " + notification.getString("date"));
             }
         }
     }

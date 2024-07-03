@@ -3,6 +3,8 @@ package CafeteriaClient.ClientServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import CafeteriaClient.utils.ConsolePrintUtils;
 import CafeteriaClient.utils.ConsoleReadUtils;
@@ -12,7 +14,7 @@ import org.json.JSONObject;
 
 public class EmployeeClientController {
 
-    static void handleEmployeeActions(PrintWriter writer, BufferedReader reader) throws IOException {
+    static void handleEmployeeActions(PrintWriter writer, BufferedReader reader,String userId) throws IOException {
 
         boolean exit = false;
         while (!exit) {
@@ -41,8 +43,18 @@ public class EmployeeClientController {
                     break;
                 case 4 :
                     jsonRequest.put("employeeAction", "VOTE_ROLLOUT_ITEMS");
-                    String foodId = ConsoleReadUtils.getStringInput("Enter Food Id: ");
+                    int foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
+                    int rolloutId = ConsoleReadUtils.getIntInput("Enter the Rollout ID present in the Rollout menu: ");
+                    int vote = ConsoleReadUtils.getIntInput("Enter your vote 1 or 0: ");
+
+                    Timestamp date = Timestamp.valueOf(LocalDateTime.now());
+
                     jsonRequest.put("foodId", foodId);
+                    jsonRequest.put("userId", userId);
+                    jsonRequest.put("vote", vote);
+                    jsonRequest.put("rolloutId", rolloutId);
+                    jsonRequest.put("date", date);
+
                     break;
                 case 5 :
                     jsonRequest.put("employeeAction", "PROVIDE_FEEDBACK");
@@ -73,7 +85,7 @@ public class EmployeeClientController {
                     ConsolePrintUtils.printNotifications(jsonResponse.getJSONArray("notifications"));
                 }
                 else if(choice == 3) {
-                    ConsolePrintUtils.printRolloutMenuItems(jsonResponse.getJSONArray("rolloutMenu"));
+                    ConsolePrintUtils.printRolloutMenuItems(jsonResponse.getJSONArray("rolloutItems"));
                 }
                 else if(choice == 4) {
                     System.out.println("Thank you for your Vote");
