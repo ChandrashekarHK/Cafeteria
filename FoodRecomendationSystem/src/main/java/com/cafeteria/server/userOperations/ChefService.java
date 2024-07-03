@@ -5,10 +5,9 @@ import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
 import com.cafeteria.server.menu.RolloutMenuItem;
 import com.cafeteria.server.menu.RolloutService;
+import com.cafeteria.server.notification.NotificationService;
 import com.cafeteria.server.recommendation.RecommendationEngine;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,6 +17,7 @@ public class ChefService {
     private RecommendationEngine recommendationEngine;
     private MenuService menuService;
     private RolloutService rolloutService;
+    private NotificationService notificationService;
     JSONObject jsonResponse = new JSONObject();
     public ChefService() throws SQLException {
 
@@ -25,10 +25,11 @@ public class ChefService {
         this.rolloutService = new RolloutService();
         this.recommendationEngine = new RecommendationEngine();
         this.menuService =new MenuService();
+        this.notificationService = new NotificationService();
 
     }
 
-    public JSONObject viewRecommendations(int topN, boolean includeSentiment) throws IOException {
+    public JSONObject viewRecommendations(int topN, boolean includeSentiment) {
            jsonResponse = recommendationEngine.generateRecommendation(topN,includeSentiment);
            jsonResponse.put("success", true);
         return jsonResponse;
@@ -54,7 +55,7 @@ public class ChefService {
         jsonResponse.put("rolloutItems", rolloutMenu);
         return jsonResponse;
     }
-    public JSONObject rolloutNewItems(List<RolloutMenuItem> items) throws IOException, SQLException {
+    public JSONObject rolloutNewItems(List<RolloutMenuItem> items) throws SQLException {
 
         if (rolloutService.deleteAllRolloutMenuItems())
         {
@@ -77,7 +78,14 @@ public class ChefService {
 
 
 
-    private void sendNotification() throws IOException {
+    public JSONObject sendNotification(String message) throws SQLException {
+        if(notificationService.sendNotification(message))
+        {
+            return jsonResponse.put("success", true);
+        }
+        else {
+            return jsonResponse.put("success", false);
+        }
 
     }
 }

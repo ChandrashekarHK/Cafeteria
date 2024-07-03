@@ -1,6 +1,6 @@
 package com.cafeteria.server.Controllers;
 import com.cafeteria.server.menu.MenuItem;
-import com.cafeteria.server.userOperations.Menueservice;
+import com.cafeteria.server.userOperations.AdminService;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class AdminController {
-    private Menueservice adminService;
+    private AdminService adminService;
 
     public AdminController() throws SQLException {
-        this.adminService =new Menueservice();
+        this.adminService =new AdminService();
 
     }
 

@@ -75,6 +75,10 @@ public class ChefController
                // jsonResponse.put("success", true);
                 jsonResponse = chefService.viewFinalVoteResult();
                 break;
+            case "SEND_NOTIFICATION":
+                String message =jsonRequest.getString("message");
+                jsonResponse = chefService.sendNotification(message);
+                break;
 
             default:
                 jsonResponse.put("success", false);

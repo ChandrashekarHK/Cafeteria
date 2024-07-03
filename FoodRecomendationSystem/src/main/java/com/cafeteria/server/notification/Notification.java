@@ -3,18 +3,18 @@ package com.cafeteria.server.notification;
 import java.sql.Timestamp;
 
 public class Notification {
-    private int id;
+    private int notificationId;
     private String message;
     private Timestamp date;
 
-    public Notification(int id, String message, Timestamp date) {
-        this.id = id;
+    public Notification(int notificationId, String message, Timestamp date) {
+        this.notificationId = notificationId;
         this.message = message;
         this.date = date;
     }
 
-    public int getId() {
-        return id;
+    public int getNotificationId() {
+        return notificationId;
     }
 
     public String getMessage() {
@@ -28,7 +28,7 @@ public class Notification {
     @Override
     public String toString() {
         return "Notification{" +
-                "id=" + id +
+                "id=" + notificationId +
                 ", message='" + message + '\'' +
                 ", date=" + date +
                 '}';

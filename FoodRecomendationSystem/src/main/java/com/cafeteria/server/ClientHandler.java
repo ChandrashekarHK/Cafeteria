@@ -75,7 +75,7 @@ public class ClientHandler implements Runnable {
                 jsonResponse =chefController.handleChefActions(jsonRequest);
                 break;
             case "EMPLOYEE_ACTION":
-                //jsonResponse = employeeService.handleEmployeeActions(jsonRequest);
+                jsonResponse = employeeController.handleEmploeeActions(jsonRequest);
                 break;
             default:
                 jsonResponse.put("success", false);
