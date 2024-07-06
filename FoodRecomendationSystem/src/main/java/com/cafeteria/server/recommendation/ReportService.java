@@ -41,7 +41,7 @@ public class ReportService {
                 sum += feedback.getRating();
             }
             double average = sum / feedbacks.size();
-            averageRatings.put(foodItemId, Math.min(5.0, Math.max(1.0, average))); // Ensure rating is between 1 and 5
+            averageRatings.put(foodItemId, Math.min(5.0, Math.max(1.0, Math.round(average * 10) / 10.0)));  // Ensure rating is between 1 and 5
         }
         return averageRatings;
     }

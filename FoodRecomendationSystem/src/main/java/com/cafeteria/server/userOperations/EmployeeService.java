@@ -1,5 +1,7 @@
 package com.cafeteria.server.userOperations;
 
+import com.cafeteria.server.feedback.FeedbackItem;
+import com.cafeteria.server.feedback.FeedbackService;
 import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
 import com.cafeteria.server.feedback.VoterService;
@@ -24,16 +26,17 @@ public class EmployeeService {
     private MenuService menueService;
     private RolloutService rolloutService;
     private NotificationService notificationService;
-   // private User user;
+    private FeedbackService feedbackService;
 
     public EmployeeService() throws SQLException {
 
-        //this.user = user;
+
         this.rolloutService = new RolloutService();
         this.menueService = new MenuService();
         this.recommendationEngine = new RecommendationEngine();
         this.voterService = new VoterService();
         this.notificationService = new NotificationService();
+        this.feedbackService = new FeedbackService();
     }
 
     JSONObject jsonResponse = new JSONObject();
@@ -77,6 +80,15 @@ public class EmployeeService {
            jsonResponse.put("notifications", notificationList);
           jsonResponse.put("success", true);
           return jsonResponse;
+    }
+    public JSONObject addFeedback(FeedbackItem feedbackItem) throws SQLException, IOException {
+        if(feedbackService.giveFeedback(feedbackItem))
+        {
+            return jsonResponse.put("success", true);
+        }
+        else {
+            return jsonResponse.put("success", false);
+        }
     }
 
 }

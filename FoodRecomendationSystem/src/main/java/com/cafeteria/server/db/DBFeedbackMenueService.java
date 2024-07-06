@@ -43,16 +43,16 @@ public class DBFeedbackMenueService {
         }
 
         public boolean insertFeedback(FeedbackItem item) {
-            String query = "INSERT INTO Feedback (feedbackId, foodItemId, rating, comment, userID) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Feedback (foodItemId, rating, comment, userID,date) VALUES (?, ?, ?, ?, ?)";
 
             try (Connection connection = DatabaseConnector.getInstance().getConnection();
                  PreparedStatement stmt = connection.prepareStatement(query))
             {
-                stmt.setInt(1, item.getFeedbackId());
-                stmt.setInt(2, item.getFoodItemId());
-                stmt.setFloat(3, item.getRating());
-                stmt.setString(4, item.getComments());
-                stmt.setString(5, item.getUserID());
+                stmt.setInt(1, item.getFoodItemId());
+                stmt.setFloat(2, item.getRating());
+                stmt.setString(3, item.getComments());
+                stmt.setString(4, item.getUserID());
+                stmt.setTimestamp(5,item.getDate());
                 int rowsAffected = stmt.executeUpdate();
                 return rowsAffected == 1;
 

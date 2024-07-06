@@ -1,14 +1,11 @@
 package com.cafeteria.server;
 
-import com.cafeteria.server.auth.AuthService;
-import com.cafeteria.server.auth.User;
-import com.cafeteria.server.auth.UserService;
 import com.cafeteria.server.Controllers.AdminController;
 import com.cafeteria.server.Controllers.ChefController;
 import com.cafeteria.server.Controllers.EmployeeController;
-import com.cafeteria.server.userOperations.EmployeeService;
-import org.json.JSONObject;
+import com.cafeteria.server.Controllers.UserController;
 
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,22 +13,19 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
 
-public class ClientHandler implements Runnable {
+public class ClientController implements Runnable {
     private Socket clientSocket;
-    private AuthService authService;
-    private UserService userService;
+    private UserController userController;
     private AdminController adminController;
     private ChefController chefController;
     private EmployeeController employeeController;
 
-    public ClientHandler(Socket socket) throws SQLException {
-
+    public ClientController(Socket socket) throws SQLException {
         this.clientSocket = socket;
-        this.authService = new AuthService();
-        this.userService = new UserService();
+        this.userController = new UserController();
         this.adminController = new AdminController();
-        this.chefController= new ChefController();
-        this.employeeController =new EmployeeController();
+        this.chefController = new ChefController();
+        this.employeeController = new EmployeeController();
     }
 
     @Override
@@ -57,25 +51,16 @@ public class ClientHandler implements Runnable {
 
         switch (action) {
             case "AUTHENTICATION":
-                String userId = jsonRequest.getString("userId");
-                String password = jsonRequest.getString("password");
-                boolean isAuthenticated = authService.login(userId, password);
-                jsonResponse.put("success", isAuthenticated);
-                if (!isAuthenticated) {
-                    jsonResponse.put("error", "Invalid credentials");
-                } else {
-                    User user = userService.getUserById(userId);
-                    jsonResponse.put("role",user.getRole());
-                }
+                jsonResponse = userController.handleUserRequest(jsonRequest);
                 break;
             case "ADMIN_ACTION":
-                jsonResponse = adminController.start(jsonRequest);
+                jsonResponse = adminController.handleAdminActions(jsonRequest);
                 break;
             case "CHEF_ACTION":
-                jsonResponse =chefController.handleChefActions(jsonRequest);
+                jsonResponse = chefController.handleChefActions(jsonRequest);
                 break;
             case "EMPLOYEE_ACTION":
-                jsonResponse = employeeController.handleEmploeeActions(jsonRequest);
+                jsonResponse = employeeController.handleEmployeeActions(jsonRequest);
                 break;
             default:
                 jsonResponse.put("success", false);
@@ -85,5 +70,4 @@ public class ClientHandler implements Runnable {
 
         return jsonResponse;
     }
-
 }

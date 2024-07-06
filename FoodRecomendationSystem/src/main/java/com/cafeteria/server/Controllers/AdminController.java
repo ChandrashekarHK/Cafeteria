@@ -15,9 +15,10 @@ public class AdminController {
 
     }
 
-    public JSONObject start(JSONObject jsonRequest) throws SQLException, IOException {
+    public JSONObject handleAdminActions(JSONObject jsonRequest) throws SQLException, IOException {
         String adminAction = jsonRequest.getString("adminAction");
         JSONObject jsonResponse = new JSONObject();
+
         int foodId ;
         String name ;
         BigDecimal price;
@@ -27,7 +28,6 @@ public class AdminController {
         switch (adminAction) {
             case "VIEW_MENU_ITEMS":
                 jsonResponse = adminService.viewMenu();
-
                 break;
 
             case "ADD_MENU_ITEM":
@@ -52,6 +52,9 @@ public class AdminController {
             case "DELETE_MENU_ITEM":
                 foodId = jsonRequest.getInt("foodId");
                 jsonResponse = adminService.deleteMenuItem(foodId);
+                break;
+            case "VIEW_DISCARD_MENU_ITEMS":
+                jsonResponse = adminService.viewDiscardMenu();
                 break;
 
             default:

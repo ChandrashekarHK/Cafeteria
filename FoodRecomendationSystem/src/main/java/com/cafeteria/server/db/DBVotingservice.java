@@ -26,7 +26,7 @@ public class DBVotingservice {
                 int foodItemId = rs.getInt("foodItemId");
                 int vote = rs.getInt("vote");
                 String voterUserId = rs.getString("userID");
-                Timestamp date = rs.getTimestamp("date");
+                Timestamp date = rs.getTimestamp("voteDate");
                 int rolloutID = rs.getInt("RolloutID");
 
                 VotingItem votingItem = new VotingItem(votingId, foodItemId, vote, voterUserId, date,rolloutID);
@@ -39,7 +39,7 @@ public class DBVotingservice {
     }
 
         public boolean addVotingrecord(VotingItem votingItem) {
-            String query = "INSERT INTO Voting (foodItemId, vote, rolloutID, userID, date) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Voting (foodItemId, vote, rolloutID, userID, voteDate) VALUES (?, ?, ?, ?, ?)";
 
             try (Connection connection = DatabaseConnector.getInstance().getConnection();
                  PreparedStatement stmt = connection.prepareStatement(query)) {

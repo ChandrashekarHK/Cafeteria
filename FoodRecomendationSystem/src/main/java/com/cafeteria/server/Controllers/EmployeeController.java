@@ -1,21 +1,18 @@
 package com.cafeteria.server.Controllers;
 
+import com.cafeteria.server.feedback.FeedbackItem;
 import com.cafeteria.server.feedback.VotingItem;
-import com.cafeteria.server.menu.MenuItem;
 
 import com.cafeteria.server.menu.RolloutMenuItem;
 
 import com.cafeteria.server.userOperations.EmployeeService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class EmployeeController {
 
@@ -27,10 +24,18 @@ public class EmployeeController {
         this.employeeService  = new EmployeeService();
 
     }
-    public JSONObject handleEmploeeActions(JSONObject jsonRequest) throws IOException, SQLException {
+
+    public JSONObject handleEmployeeActions(JSONObject jsonRequest) throws IOException, SQLException {
         String chefAction = jsonRequest.getString("employeeAction");
         JSONObject jsonResponse = new JSONObject();
         List<RolloutMenuItem> rolloutMenuItemList = new ArrayList<>();
+        int foodId;
+        String userId;
+        int vote;
+        Timestamp date;
+        int rolloutId ;
+        int autoIncerementedID =0;
+        float rating;
 
         switch (chefAction) {
             case "VIEW_MENU_ITEMS":
@@ -44,29 +49,37 @@ public class EmployeeController {
                 break;
 
             case "VOTE_ROLLOUT_ITEMS":
-                int foodId = jsonResponse.getInt("foodId");
-                String userId = jsonResponse.getString("userId");
-                int vote = jsonResponse.getInt("vote");
-                Timestamp date = Timestamp.valueOf(jsonResponse.getString("date"));
-                int rolloutId = jsonResponse.getInt("rolloutId");
-                int autoIncerementedVoteID =0;
-                VotingItem voteItem = new VotingItem(autoIncerementedVoteID,foodId,vote,userId,date,rolloutId);
+                 foodId = jsonRequest.getInt("foodId");
+                 userId = jsonRequest.getString("userId");
+                 vote = jsonRequest.getInt("vote");
+                 date = Timestamp.valueOf(jsonRequest.getString("date"));
+                 rolloutId = jsonRequest.getInt("rolloutId");
+                 autoIncerementedID =0;
+                VotingItem voteItem = new VotingItem(autoIncerementedID,foodId,vote,userId,date,rolloutId);
                 jsonResponse= employeeService.castVote(voteItem);
 
                 break;
 
             case "VIEW_ROLLOUT_MENU":
-                //jsonResponse.put("success", true);
                 jsonResponse = employeeService.viewRolloutMenu();
 
                 break;
             case "VIEW_NOTIFICATIONS":
                 jsonResponse = employeeService.viewNotification();
                 break;
+            case "PROVIDE_FEEDBACK":
+                foodId = jsonRequest.getInt("foodId");
+                String comment= jsonRequest.getString("comment");
+                rating = jsonRequest.getFloat("rating");
+                date = Timestamp.valueOf(jsonRequest.getString("date"));
+                userId = jsonRequest.getString("userId");
+                FeedbackItem feedbackItem = new FeedbackItem(autoIncerementedID,foodId,rating,comment,userId,date);
+                jsonResponse = employeeService.addFeedback(feedbackItem);
+                break;
 
             default:
                 jsonResponse.put("success", false);
-                jsonResponse.put("error", "Invalid chef action");
+                jsonResponse.put("error", "Invalid Employee action");
                 break;
         }
 

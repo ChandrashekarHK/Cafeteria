@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 
 public class ServerSocketHandler {
-    private static final int PORT = 7777;
+    private static final int PORT = Integer.parseInt(System.getenv("CAFETERIA_SERVER_PORT"));
     private ServerSocket serverSocket;
 
     public ServerSocketHandler() throws IOException {
@@ -18,7 +18,7 @@ public class ServerSocketHandler {
         while (true) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(new ClientHandler(clientSocket)).start();
+                new Thread(new ClientController(clientSocket)).start();
 
             } catch (IOException e) {
                 e.printStackTrace();

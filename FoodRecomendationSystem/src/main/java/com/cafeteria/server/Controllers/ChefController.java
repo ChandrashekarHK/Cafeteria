@@ -68,16 +68,20 @@ public class ChefController
             case "VIEW_ROLLOUT_MENU":
                 //jsonResponse.put("success", true);
                 jsonResponse = chefService.viewRolloutMenu();
-
-
                 break;
+
             case "VIEW_FINAL_VOTING":
                // jsonResponse.put("success", true);
                 jsonResponse = chefService.viewFinalVoteResult();
                 break;
+
             case "SEND_NOTIFICATION":
                 String message =jsonRequest.getString("message");
                 jsonResponse = chefService.sendNotification(message);
+                break;
+
+            case "VIEW_DISCARD_MENU_ITEMS":
+                jsonResponse = chefService.viewDiscardMenu();
                 break;
 
             default:

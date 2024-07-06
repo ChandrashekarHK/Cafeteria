@@ -1,10 +1,7 @@
 package com.cafeteria.server.notification;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import com.cafeteria.server.db.DBNotificationService;
 import java.util.List;
 

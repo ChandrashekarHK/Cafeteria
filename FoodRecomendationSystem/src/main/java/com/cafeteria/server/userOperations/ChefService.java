@@ -1,5 +1,7 @@
 package com.cafeteria.server.userOperations;
 
+import com.cafeteria.server.discardMenuService.DiscardMenuItem;
+import com.cafeteria.server.discardMenuService.DiscardMenuService;
 import com.cafeteria.server.feedback.VoterService;
 import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
@@ -8,7 +10,10 @@ import com.cafeteria.server.menu.RolloutService;
 import com.cafeteria.server.notification.NotificationService;
 import com.cafeteria.server.recommendation.RecommendationEngine;
 import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ChefService {
@@ -18,6 +23,7 @@ public class ChefService {
     private MenuService menuService;
     private RolloutService rolloutService;
     private NotificationService notificationService;
+    private DiscardMenuService discardMenuService;
     JSONObject jsonResponse = new JSONObject();
     public ChefService() throws SQLException {
 
@@ -26,6 +32,7 @@ public class ChefService {
         this.recommendationEngine = new RecommendationEngine();
         this.menuService =new MenuService();
         this.notificationService = new NotificationService();
+        this.discardMenuService = new DiscardMenuService();
 
     }
 
@@ -75,7 +82,25 @@ public class ChefService {
             return jsonResponse.put("success", false).put("error", "Failed to delete existing items.");
         }
     }
+    public JSONObject viewDiscardMenu() throws SQLException {
+        JSONObject jsonResponse = new JSONObject();
+        List<DiscardMenuItem> discardItems = discardMenuService.getAllDiscardItems();
+        if (discardItems != null && !discardItems.isEmpty())
+        {
+            jsonResponse.put("message", "See Discard table.");
+            jsonResponse.put("discardItems", discardItems);
+        }
+        else
+        {
+            discardMenuService.createAndSaveDiscardItems();
+            jsonResponse.put("message", "Discard menu for " + LocalDate.now().getMonth() + " has been created.");
+            discardItems = discardMenuService.getAllDiscardItems();
+            jsonResponse.put("discardItems", discardItems);
 
+        }
+        jsonResponse.put("success", true);
+        return jsonResponse;
+    }
 
 
     public JSONObject sendNotification(String message) throws SQLException {

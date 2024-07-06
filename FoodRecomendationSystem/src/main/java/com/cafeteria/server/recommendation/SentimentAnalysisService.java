@@ -16,10 +16,19 @@ public class SentimentAnalysisService {
         for (Map.Entry<Integer, List<FeedbackItem>> entry : groupedFeedback.entrySet()) {
             int foodItemId = entry.getKey();
             int totalSentimentScore = 0;
+            int positiveCount = 0;
+            int negativeCount = 0;
             for (FeedbackItem feedback : entry.getValue()) {
-                totalSentimentScore += calculateSentimentScore(feedback.getComments());
+                int sentimentScore = calculateSentimentScore(feedback.getComments());
+                totalSentimentScore += sentimentScore;
+                if (sentimentScore > 0) {
+                    positiveCount++;
+                } else if (sentimentScore < 0) {
+                    negativeCount++;
+                }
             }
             sentimentScores.put(foodItemId, totalSentimentScore);
+            System.out.println("Food Item ID: " + foodItemId + " Positive Comments: " + positiveCount + " Negative Comments: " + negativeCount);
         }
         return sentimentScores;
     }
@@ -36,10 +45,21 @@ public class SentimentAnalysisService {
         return score;
     }
 
+    public String determineSentiment(String comments) {
+        int score = calculateSentimentScore(comments);
+        if (score > 0) {
+            return "Positive";
+        } else if (score < 0) {
+            return "Negative";
+        } else {
+            return "Neutral";
+        }
+    }
+
     public String frameSentiment(List<FeedbackItem> feedbacks) {
         StringBuilder framedSentiment = new StringBuilder();
         for (FeedbackItem feedback : feedbacks) {
-            framedSentiment.append(feedback.getComments()).append(" ");
+            framedSentiment.append(feedback.getComments()).append(" (").append(determineSentiment(feedback.getComments())).append(") ").append("\n");
         }
         return framedSentiment.toString().trim();
     }
