@@ -9,8 +9,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 7777;
+    private static final String SERVER_ADDRESS = System.getenv("SERVER_ADDRESS");
+    private static final int SERVER_PORT = Integer.parseInt(System.getenv("SERVER_PORT"));
 
     public static void main(String[] args)
     {

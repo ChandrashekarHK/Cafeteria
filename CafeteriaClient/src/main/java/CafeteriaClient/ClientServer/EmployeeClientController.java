@@ -15,7 +15,12 @@ import org.json.JSONObject;
 public class EmployeeClientController {
 
     static void handleEmployeeActions(PrintWriter writer, BufferedReader reader,String userId) throws IOException {
-
+        int foodId;
+        int vote;
+        Timestamp date;
+        int rolloutId ;
+        int autoIncerementedID =0;
+        float rating;
         boolean exit = false;
         while (!exit) {
             System.out.println("Employee Actions:");
@@ -43,27 +48,30 @@ public class EmployeeClientController {
                     break;
                 case 4 :
                     jsonRequest.put("employeeAction", "VOTE_ROLLOUT_ITEMS");
-                    int foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
-                    int rolloutId = ConsoleReadUtils.getIntInput("Enter the Rollout ID present in the Rollout menu: ");
-                    int vote = ConsoleReadUtils.getIntInput("Enter your vote 1 or 0: ");
-
-                    Timestamp date = Timestamp.valueOf(LocalDateTime.now());
-
+                    foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     jsonRequest.put("foodId", foodId);
-                    jsonRequest.put("userId", userId);
-                    jsonRequest.put("vote", vote);
+                    rolloutId = ConsoleReadUtils.getIntInput("Enter the Rollout ID present in the Rollout menu: ");
                     jsonRequest.put("rolloutId", rolloutId);
+                    jsonRequest.put("userId", userId);
+                    vote = ConsoleReadUtils.getIntInput("Enter your vote 1 or 0: ");
+                    jsonRequest.put("vote", vote);
+                    date = Timestamp.valueOf(LocalDateTime.now());
                     jsonRequest.put("date", date);
+
+                    System.out.println("foodId:  " + jsonRequest.getInt("foodId"));
 
                     break;
                 case 5 :
                     jsonRequest.put("employeeAction", "PROVIDE_FEEDBACK");
-                    String food_Id = ConsoleReadUtils.getStringInput("Enter Food Id: ");
+                    int food_Id = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     String comment = ConsoleReadUtils.getStringInput("Enter your comment: ");
-                    double rating = ConsoleReadUtils.getRatingInput("Enter Rating (1-5): ");
+                    rating = (float) ConsoleReadUtils.getRatingInput("Enter Rating (1-5): ");
+                    date = Timestamp.valueOf(LocalDateTime.now());
                     jsonRequest.put("foodId", food_Id);
                     jsonRequest.put("comment", comment);
                     jsonRequest.put("rating", rating);
+                    jsonRequest.put("date", date);
+                    jsonRequest.put("userId", userId);
                     break;
                 case 6 :
                     exit = true;

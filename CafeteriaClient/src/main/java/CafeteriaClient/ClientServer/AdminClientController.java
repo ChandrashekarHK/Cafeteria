@@ -26,7 +26,8 @@ public class AdminClientController {
             System.out.println("2. Add Menu Item");
             System.out.println("3. Update Menu Item");
             System.out.println("4. Delete Menu Item");
-            System.out.println("5. Logout");
+            System.out.println("5. View Discard Menu Items");
+            System.out.println("6. Logout");
 
             int choice = ConsoleReadUtils.getIntInput("Enter your choice: ");
 
@@ -62,7 +63,12 @@ public class AdminClientController {
                     jsonRequest.put("adminAction", "DELETE_MENU_ITEM");
                     jsonRequest.put("foodId", foodId);
                     break;
-                case 5 :
+
+                case 5:
+                    jsonRequest.put("adminAction", "VIEW_DISCARD_MENU_ITEMS");
+                    break;
+
+                case 6 :
                     exit = true;
                     continue;
                 default:
@@ -73,6 +79,7 @@ public class AdminClientController {
             writer.println(jsonRequest.toString());
 
             JSONObject jsonResponse = new JSONObject(reader.readLine());
+
             if (jsonResponse.getBoolean("success")) {
                 System.out.println("Action successful.");
                 if(choice == 1) {
@@ -93,6 +100,10 @@ public class AdminClientController {
                 }
                 else if(choice == 4) {
                     System.out.println("Successfully Deleted food item in menu");
+                }
+                else if(choice == 5) {
+                    System.out.println("*************"+jsonResponse.getString("message")+"*************");
+                    ConsolePrintUtils.printDiscardMenuItems(jsonResponse.getJSONArray("discardItems"));
                 }
 
             } else {

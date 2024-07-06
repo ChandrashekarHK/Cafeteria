@@ -1,11 +1,8 @@
 package CafeteriaClient.utils;
 
-
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class ConsoleReadUtils {
     public static final Scanner scanner = new Scanner(System.in);
@@ -26,6 +23,7 @@ public class ConsoleReadUtils {
         }
         return input;
     }
+
     public static boolean getBooleanInput(String prompt) {
         boolean input = false;
         boolean valid = false;
@@ -47,6 +45,7 @@ public class ConsoleReadUtils {
         System.out.print(prompt);
         return scanner.nextLine();
     }
+
     public static BigDecimal getBigDecimalInput(String prompt) {
         BigDecimal input = null;
         boolean valid = false;
@@ -58,19 +57,20 @@ public class ConsoleReadUtils {
                 valid = true;
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid decimal number.");
-                scanner.next(); // Clear the invalid input
+                scanner.next();
             }
         }
         return input;
     }
 
-    public static double getDoubleInput(String prompt) {
-        double input = 0;
+    public static double getFloatInput(String prompt) {
+        float input = 0;
         boolean valid = false;
         while (!valid) {
             System.out.print(prompt);
             try {
-                input = scanner.nextDouble();
+                input = scanner.nextFloat();
+                input = Math.round(input * 100) / 100.0f;
                 scanner.nextLine();
                 valid = true;
             } catch (InputMismatchException e) {
@@ -84,7 +84,7 @@ public class ConsoleReadUtils {
     public static double getRatingInput(String prompt) {
         double rating;
         while (true) {
-            rating = getDoubleInput(prompt);
+            rating = getFloatInput(prompt);
             if (rating >= 1 && rating <= 5) {
                 break;
             } else {
@@ -93,6 +93,5 @@ public class ConsoleReadUtils {
         }
         return rating;
     }
-
 
 }
