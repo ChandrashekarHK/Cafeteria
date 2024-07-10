@@ -1,5 +1,7 @@
 package com.cafeteria.server.Controllers;
 
+import com.cafeteria.server.auth.UserProfile;
+import com.cafeteria.server.feedback.DiscardItemFeedback;
 import com.cafeteria.server.feedback.FeedbackItem;
 import com.cafeteria.server.feedback.VotingItem;
 
@@ -36,6 +38,12 @@ public class EmployeeController {
         int rolloutId ;
         int autoIncerementedID =0;
         float rating;
+        String cuisineType;
+        int spiceLevel ;
+        String foodType ;
+        int saltiness;
+        int sweetness ;
+
 
         switch (chefAction) {
             case "VIEW_MENU_ITEMS":
@@ -60,9 +68,21 @@ public class EmployeeController {
 
                 break;
 
-            case "VIEW_ROLLOUT_MENU":
-                jsonResponse = employeeService.viewRolloutMenu();
+            case "SAVE_USER_PROFILE":
+                userId = jsonRequest.getString("userId");
+                cuisineType = jsonRequest.getString("cuisineType");
+                spiceLevel = jsonRequest.getInt("spiceLevel");
+                foodType = jsonRequest.getString("foodType");
+                saltiness = jsonRequest.getInt("saltiness");
+                sweetness = jsonRequest.getInt("sweetness");
 
+                UserProfile userProfile = new UserProfile(userId,foodType,spiceLevel,sweetness,saltiness,cuisineType);
+                jsonResponse = employeeService.saveUserProfile(userProfile);
+
+                break;
+            case "VIEW_RECOMMENDED_ROLLOUT_MENU":
+                userId = jsonRequest.getString("userId");
+                jsonResponse = employeeService.viewRecommendedRolloutMenu(userId);
                 break;
             case "VIEW_NOTIFICATIONS":
                 jsonResponse = employeeService.viewNotification();
@@ -75,6 +95,16 @@ public class EmployeeController {
                 userId = jsonRequest.getString("userId");
                 FeedbackItem feedbackItem = new FeedbackItem(autoIncerementedID,foodId,rating,comment,userId,date);
                 jsonResponse = employeeService.addFeedback(feedbackItem);
+                break;
+
+            case "PROVIDE_DISCARD_ITEM_FEEDBACK":
+                int discardId = jsonRequest.getInt("discardId");
+                String answerOne= jsonRequest.getString("answerOne");
+                String answerTwo= jsonRequest.getString("answerTwo");
+                String answerThree= jsonRequest.getString("answerThree");
+                userId = jsonRequest.getString("userId");
+                DiscardItemFeedback discardItemFeedback = new DiscardItemFeedback(userId,discardId,answerOne,answerTwo,answerThree);
+                jsonResponse = employeeService.addDiscardItemFeedback(discardItemFeedback);
                 break;
 
             default:

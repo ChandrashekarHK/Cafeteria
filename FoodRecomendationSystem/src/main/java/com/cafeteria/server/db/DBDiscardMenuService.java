@@ -26,7 +26,7 @@ public class DBDiscardMenuService {
         }
     }
 
-    public List<DiscardMenuItem> getAllDiscardItems() throws SQLException {
+    public List<DiscardMenuItem> getAllDiscardItems(){
         String sql = "SELECT * FROM DiscardFoodItem";
         List<DiscardMenuItem> discardItems = new ArrayList<>();
 

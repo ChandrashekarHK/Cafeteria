@@ -1,6 +1,5 @@
 package com.cafeteria.server.Controllers;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class ChefController
     }
 
 
-    public JSONObject handleChefActions(JSONObject jsonRequest) throws IOException, SQLException {
+    public JSONObject handleChefActions(JSONObject jsonRequest) throws SQLException {
         String chefAction = jsonRequest.getString("chefAction");
         JSONObject jsonResponse = new JSONObject();
         List<RolloutMenuItem> rolloutMenuItemList = new ArrayList<>();
@@ -36,7 +35,7 @@ public class ChefController
 
             case "VIEW_RECOMMENDED_MENU":
                 int numberOfItems = jsonRequest.getInt("numberOfFoodItems");
-                boolean sentimentNecessity = false;//jsonRequest.getBoolean("sentimentNecessity");
+                boolean sentimentNecessity = false;
                jsonResponse = chefService.viewRecommendations(numberOfItems,sentimentNecessity);
                 break;
 
@@ -53,7 +52,7 @@ public class ChefController
                     if(menuService.checkFoodId(foodId))
                     {
                         MenuItem menuItem = menuService.getMenuIteamByFoodId(foodId);
-                        RolloutMenuItem rolloutMenuItem = new RolloutMenuItem(menuItem.getFoodId(), menuItem.getName(), rolloutID, rolloutDate);
+                        RolloutMenuItem rolloutMenuItem = new RolloutMenuItem(menuItem.getFoodItemID(), menuItem.getName(), rolloutID, rolloutDate);
                         rolloutMenuItemList.add(rolloutMenuItem);
                     }
                     else {
@@ -66,12 +65,10 @@ public class ChefController
                 break;
 
             case "VIEW_ROLLOUT_MENU":
-                //jsonResponse.put("success", true);
                 jsonResponse = chefService.viewRolloutMenu();
                 break;
 
             case "VIEW_FINAL_VOTING":
-               // jsonResponse.put("success", true);
                 jsonResponse = chefService.viewFinalVoteResult();
                 break;
 
@@ -83,6 +80,10 @@ public class ChefController
             case "VIEW_DISCARD_MENU_ITEMS":
                 jsonResponse = chefService.viewDiscardMenu();
                 break;
+            case "VIEW_DISCARD_ITEM_FEEDBACK":
+                jsonResponse = chefService.viewDiscardFeedbackMenu();
+                break;
+
 
             default:
                 jsonResponse.put("success", false);

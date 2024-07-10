@@ -33,7 +33,6 @@ public class DiscardMenuService extends ReportService {
         Map<Integer, List<FeedbackItem>> groupedFeedback = groupFeedbackByFoodItem(feedbackList);
         Map<Integer, Double> averageRatings = calculateAverageRatings(groupedFeedback);
 
-        JSONArray discardItems = new JSONArray();
 
         for (Map.Entry<Integer, Double> entry : averageRatings.entrySet()) {
             int foodItemId = entry.getKey();
@@ -44,7 +43,7 @@ public class DiscardMenuService extends ReportService {
                 Timestamp discardedDate = Timestamp.valueOf(LocalDateTime.now());
 
                 DiscardMenuItem discardItem = new DiscardMenuItem();
-                discardItem.setFoodId(foodItem.getFoodId());
+                discardItem.setFoodId(foodItem.getFoodItemID());
                 discardItem.setName(foodItem.getName());
                 discardItem.setAverageRating(averageRating);
                 discardItem.setDate(discardedDate);
@@ -54,7 +53,7 @@ public class DiscardMenuService extends ReportService {
         }
     }
 
-    public List<DiscardMenuItem> getAllDiscardItems() throws SQLException {
+    public List<DiscardMenuItem> getAllDiscardItems() {
         return dbDiscardMenuService.getAllDiscardItems();
     }
 }

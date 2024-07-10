@@ -75,7 +75,7 @@ public class ReportService {
             }
 
             JSONObject recommendation = new JSONObject();
-            recommendation.put("foodId", foodItem.getFoodId());
+            recommendation.put("foodId", foodItem.getFoodItemID());
             recommendation.put("name", foodItem.getName());
             recommendation.put("price", foodItem.getPrice());
             recommendation.put("averageRating", averageRating);

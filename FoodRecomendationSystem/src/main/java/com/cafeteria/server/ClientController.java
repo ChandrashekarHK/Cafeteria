@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.SQLException;
 
 public class ClientController implements Runnable {
@@ -30,19 +31,43 @@ public class ClientController implements Runnable {
 
     @Override
     public void run() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)) {
+        int retryAttempts = 3;
+        int retryDelay = 3000;
 
-            String request;
-            while ((request = reader.readLine()) != null) {
-                JSONObject jsonRequest = new JSONObject(request);
-                JSONObject jsonResponse = handleRequest(jsonRequest);
-                writer.println(jsonResponse.toString());
+        while (retryAttempts > 0) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)) {
+
+                String request;
+                while ((request = reader.readLine()) != null) {
+                    JSONObject jsonRequest = new JSONObject(request);
+                    JSONObject jsonResponse = handleRequest(jsonRequest);
+                    writer.println(jsonResponse.toString());
+                }
+                break;
+
+            } catch (SocketException e) {
+                System.err.println("SocketException: " + e.getMessage());
+                retryAttempts--;
+                if (retryAttempts > 0) {
+                    System.out.println("Retrying to connect... Attempts left: " + retryAttempts);
+                    try {
+                        Thread.sleep(retryDelay);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                } else {
+                    System.err.println("All retry attempts failed. Giving up.");
+                }
+
+            } catch (IOException | SQLException e) {
+                System.err.println("Server exception: " + e.getMessage());
+                e.printStackTrace();
+                break;
             }
-        } catch (IOException | SQLException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
         }
+
     }
 
     private JSONObject handleRequest(JSONObject jsonRequest) throws SQLException, IOException {

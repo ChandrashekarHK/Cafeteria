@@ -2,17 +2,16 @@ package com.cafeteria.server.menu;
 
 import com.cafeteria.server.db.DBMenuItemService;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class MenuService {
     private DBMenuItemService dbMenuItemService;
 
-    public MenuService() throws SQLException {
+    public MenuService() {
         this.dbMenuItemService = new DBMenuItemService();
     }
 
-    public boolean addMenuItem(MenuItem item) throws SQLException {
+    public boolean addMenuItem(MenuItem item)  {
         if(dbMenuItemService.addMenuItem(item))
         {
             return true;
@@ -53,8 +52,7 @@ public class MenuService {
         }
 
     }
-    public List<MenuItem> getMenu()
-    {
+    public List<MenuItem> getMenu()  {
         List<MenuItem> Menue = dbMenuItemService.readAllMenuItems();
         return Menue;
     }

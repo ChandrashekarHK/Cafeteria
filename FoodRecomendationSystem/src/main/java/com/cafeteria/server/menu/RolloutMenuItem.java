@@ -1,12 +1,12 @@
 package com.cafeteria.server.menu;
 
-import java.time.LocalDateTime;  // Import LocalDateTime for date handling
+import java.time.LocalDateTime;
 
 public class RolloutMenuItem {
     private int foodId;
     private String name;
     private int rolloutID;
-    private LocalDateTime rolloutDate;  // Adding LocalDateTime field for date
+    private LocalDateTime rolloutDate;
 
     public RolloutMenuItem(int foodId, String name, int rolloutID, LocalDateTime rolloutDate) {
         this.foodId = foodId;

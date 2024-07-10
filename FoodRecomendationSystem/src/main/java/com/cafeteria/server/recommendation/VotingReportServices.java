@@ -60,7 +60,7 @@ public class VotingReportServices {
             MenuItem menuItem = menuService.getMenuIteamByFoodId(foodItemId);
 
             JSONObject votingResult = new JSONObject();
-            votingResult.put("foodId", menuItem.getFoodId());
+            votingResult.put("foodId", menuItem.getFoodItemID());
             votingResult.put("foodName", menuItem.getName());
             votingResult.put("averageVote", averageVote);
             votingResultsArray.put(votingResult);

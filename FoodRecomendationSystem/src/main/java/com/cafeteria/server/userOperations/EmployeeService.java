@@ -1,11 +1,10 @@
 package com.cafeteria.server.userOperations;
 
-import com.cafeteria.server.feedback.FeedbackItem;
-import com.cafeteria.server.feedback.FeedbackService;
+import com.cafeteria.server.auth.UserProfile;
+import com.cafeteria.server.db.DBUserProfileService;
+import com.cafeteria.server.feedback.*;
 import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
-import com.cafeteria.server.feedback.VoterService;
-import com.cafeteria.server.feedback.VotingItem;
 import com.cafeteria.server.menu.RolloutMenuItem;
 import com.cafeteria.server.notification.Notification;
 import com.cafeteria.server.notification.NotificationService;
@@ -15,9 +14,7 @@ import com.cafeteria.server.menu.RolloutService;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Random;
 
 public class EmployeeService {
 
@@ -27,7 +24,8 @@ public class EmployeeService {
     private RolloutService rolloutService;
     private NotificationService notificationService;
     private FeedbackService feedbackService;
-
+    private DBUserProfileService dbUserProfileService;
+    private DiscardItemFeedbackService discardItemFeedbackService;
     public EmployeeService() throws SQLException {
 
 
@@ -37,6 +35,8 @@ public class EmployeeService {
         this.voterService = new VoterService();
         this.notificationService = new NotificationService();
         this.feedbackService = new FeedbackService();
+        this.dbUserProfileService = new DBUserProfileService();
+        this.discardItemFeedbackService = new DiscardItemFeedbackService();
     }
 
     JSONObject jsonResponse = new JSONObject();
@@ -45,6 +45,7 @@ public class EmployeeService {
         jsonResponse = recommendationEngine.generateRecommendation(topN,includeSentiment);
         jsonResponse.put("success", true);
         return jsonResponse;
+
     }
 
     public JSONObject castVote(VotingItem voteItem)
@@ -54,6 +55,7 @@ public class EmployeeService {
             return jsonResponse.put("success", true);
         }
         else {
+            jsonResponse.put("error", "Not able add your vote Please try again  ");
             return jsonResponse.put("success", false);
         }
 
@@ -62,18 +64,29 @@ public class EmployeeService {
     public JSONObject viewMenu() {
         JSONObject jsonResponse = new JSONObject();
         List<MenuItem> menu = menueService.getMenu();
-        jsonResponse.put("success", true);
-        jsonResponse.put("menu", menu);
-        return jsonResponse;
+        if( menu != null && !menu.isEmpty()) {
+            jsonResponse.put("menu", menu);
+            return jsonResponse.put("success", true);
+        }
+        else {
+            jsonResponse.put("error", "Not able get the Food Menu Now Please try again  ");
+            return jsonResponse.put("success", false);
+        }
     }
 
-    public JSONObject viewRolloutMenu() {
+    public JSONObject viewRecommendedRolloutMenu(String userID) {
         JSONObject jsonResponse = new JSONObject();
-        List<RolloutMenuItem> rolloutMenu = rolloutService.getRolloutMenu();
-        jsonResponse.put("success", true);
-        jsonResponse.put("rolloutItems", rolloutMenu);
-        return jsonResponse;
+        List<RolloutMenuItem> rolloutMenu = rolloutService.getRecommendedRolloutMenu(userID);
+        if( rolloutMenu != null && !rolloutMenu.isEmpty()) {
+            jsonResponse.put("rolloutItems", rolloutMenu);
+            return jsonResponse.put("success", true);
+        }
+        else {
+            jsonResponse.put("error", "Not able get the  Recommended Rollout  Menu Now Please try again  ");
+            return jsonResponse.put("success", false);
+        }
     }
+
 
     public JSONObject viewNotification() {
             List<Notification> notificationList = notificationService.viewRecentNotifications();
@@ -87,8 +100,30 @@ public class EmployeeService {
             return jsonResponse.put("success", true);
         }
         else {
+            jsonResponse.put("error", "Not able to get your feedback  Please try again  ");
             return jsonResponse.put("success", false);
         }
     }
+    public JSONObject saveUserProfile(UserProfile userProfile) throws SQLException, IOException {
+        if(dbUserProfileService.saveOrUpdateUserProfile(userProfile))
+        {
+            return jsonResponse.put("success", true);
+        }
+        else {
+            jsonResponse.put("error", "Not able to Save your profile Please try again  ");
+            return jsonResponse.put("success", false);
+        }
+    }
+    public JSONObject addDiscardItemFeedback(DiscardItemFeedback feedbackItem) throws SQLException, IOException {
+        if(discardItemFeedbackService.addDiscardItemFeedback(feedbackItem))
+        {
+            return jsonResponse.put("success", true);
+        }
+        else {
+            jsonResponse.put("error", "you are already given feed back to that discard item");
+            return jsonResponse.put("success", false);
+        }
+    }
+
 
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class DBRolloutMenuService {
     //private Connection connection;
 
-    public DBRolloutMenuService() throws SQLException {
+    public DBRolloutMenuService() {
       //  this.connection = DatabaseConnector.getConnection();
     }
 
@@ -45,7 +45,7 @@ public class DBRolloutMenuService {
                 int foodItemId = rs.getInt("foodItemId");
                 String name = rs.getString("name");
                 LocalDateTime date = rs.getTimestamp("Date").toLocalDateTime();
-                rolloutMenuItems.add(new RolloutMenuItem(rolloutID, name, foodItemId,date));
+                rolloutMenuItems.add(new RolloutMenuItem(foodItemId, name,rolloutID,date));
             }
         } catch (SQLException e) {
             e.printStackTrace();

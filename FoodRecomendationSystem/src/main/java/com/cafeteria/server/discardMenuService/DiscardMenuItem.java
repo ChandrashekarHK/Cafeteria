@@ -9,7 +9,6 @@ public class DiscardMenuItem {
     private double averageRating;
     private Timestamp date;
 
-    // Getters and Setters
     public int getDiscardId() {
         return discardId;
     }
