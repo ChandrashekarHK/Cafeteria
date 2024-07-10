@@ -8,7 +8,11 @@ import java.math.BigDecimal;
 
 import CafeteriaClient.utils.ConsolePrintUtils;
 import CafeteriaClient.utils.ConsoleReadUtils;
+import CafeteriaClient.utils.MenuInputHelper;
 import org.json.JSONObject;
+
+import static CafeteriaClient.utils.ConsoleReadUtils.*;
+import static CafeteriaClient.utils.MenuInputHelper.*;
 
 
 public class AdminClientController {
@@ -16,10 +20,12 @@ public class AdminClientController {
     static void handleAdminActions(PrintWriter writer, BufferedReader reader) throws IOException {
 
         int foodId;
-        String foodName;
+        String foodName, cuisineType, foodType, category;
         BigDecimal price;
         boolean availability;
+        int spiceLevel, saltiness, sweetness;
         boolean exit = false;
+
         while (!exit) {
             System.out.println("Admin Actions:");
             System.out.println("1. View Main Menu Item");
@@ -42,21 +48,49 @@ public class AdminClientController {
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     foodName = ConsoleReadUtils.getStringInput("Enter Food name: ");
                     price = ConsoleReadUtils.getBigDecimalInput("Enter Food price: ");
-                    availability = ConsoleReadUtils.getBooleanInput("Enter 1 if food available else 0 ");
+                    availability = MenuInputHelper.getAvailabilityInput();
+                    cuisineType = ConsoleReadUtils.getStringInput("Enter Cuisine Type: ");
+                    spiceLevel = MenuInputHelper.getSpiceLevelInput();
+                    foodType = MenuInputHelper.getFoodTypeInput();
+                    saltiness = MenuInputHelper.getSaltinessInput();
+                    sweetness = MenuInputHelper.getSweetnessInput();
+                    category = MenuInputHelper.getCategoryInput();
+
                     jsonRequest.put("adminAction", "ADD_MENU_ITEM");
                     jsonRequest.put("foodId", foodId);
                     jsonRequest.put("name", foodName);
                     jsonRequest.put("price", price);
-                    jsonRequest.put("Availability", availability);
+                    jsonRequest.put("availability", availability);
+                    jsonRequest.put("cuisineType", cuisineType);
+                    jsonRequest.put("spiceLevel", spiceLevel);
+                    jsonRequest.put("foodType", foodType);
+                    jsonRequest.put("saltiness", saltiness);
+                    jsonRequest.put("sweetness", sweetness);
+                    jsonRequest.put("category", category);
                     break;
                 case 3:
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     foodName = ConsoleReadUtils.getStringInput("Enter Food name: ");
                     price = ConsoleReadUtils.getBigDecimalInput("Enter Food price: ");
+                    availability = MenuInputHelper.getAvailabilityInput();
+                    cuisineType = ConsoleReadUtils.getStringInput("Enter Cuisine Type: ");
+                    spiceLevel = MenuInputHelper.getSpiceLevelInput();
+                    foodType = MenuInputHelper.getFoodTypeInput();
+                    saltiness = MenuInputHelper.getSaltinessInput();
+                    sweetness = MenuInputHelper.getSweetnessInput();
+                    category = MenuInputHelper.getCategoryInput();
+
                     jsonRequest.put("adminAction", "UPDATE_MENU_ITEM");
                     jsonRequest.put("foodId", foodId);
                     jsonRequest.put("name", foodName);
                     jsonRequest.put("price", price);
+                    jsonRequest.put("availability", availability);
+                    jsonRequest.put("cuisineType", cuisineType);
+                    jsonRequest.put("spiceLevel", spiceLevel);
+                    jsonRequest.put("foodType", foodType);
+                    jsonRequest.put("saltiness", saltiness);
+                    jsonRequest.put("sweetness", sweetness);
+                    jsonRequest.put("category", category);
                     break;
                 case 4:
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
@@ -68,7 +102,7 @@ public class AdminClientController {
                     jsonRequest.put("adminAction", "VIEW_DISCARD_MENU_ITEMS");
                     break;
 
-                case 6 :
+                case 6:
                     exit = true;
                     continue;
                 default:

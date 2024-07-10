@@ -1,5 +1,6 @@
 package CafeteriaClient.utils;
 
+
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -23,7 +24,6 @@ public class ConsoleReadUtils {
         }
         return input;
     }
-
     public static boolean getBooleanInput(String prompt) {
         boolean input = false;
         boolean valid = false;
@@ -45,7 +45,6 @@ public class ConsoleReadUtils {
         System.out.print(prompt);
         return scanner.nextLine();
     }
-
     public static BigDecimal getBigDecimalInput(String prompt) {
         BigDecimal input = null;
         boolean valid = false;

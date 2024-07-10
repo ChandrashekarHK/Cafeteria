@@ -23,15 +23,16 @@ public class ChefClientController {
             System.out.println("3. Add Items to Rollout Menu");
             System.out.println("4. View Rollout Menu");
             System.out.println("5. View Final Voting");
-            System.out.println("6. Send Notification");
-            System.out.println("7. View Discard Menu Items");
-            System.out.println("8. Logout");
+            System.out.println("6. View Discard Menu ItemsFeedback ");
+            System.out.println("7. Send Notification");
+            System.out.println("8. View Discard Menu Items ");
+            System.out.println("9. Logout");
 
             int choice = ConsoleReadUtils.getIntInput("Enter your choice: ");
 
             JSONObject jsonRequest = createJsonRequest(choice);
             if (jsonRequest == null) {
-                if (choice == 8) {
+                if (choice == 9) {
                     exit = true;
                 } else {
                     System.out.println("Invalid choice.");
@@ -79,15 +80,16 @@ public class ChefClientController {
                 jsonRequest.put("chefAction", "VIEW_FINAL_VOTING");
                 break;
             case 6:
+                jsonRequest.put("chefAction", "VIEW_DISCARD_ITEM_FEEDBACK");
+                break;
+            case 7:
                 jsonRequest.put("chefAction", "SEND_NOTIFICATION");
                 String message = ConsoleReadUtils.getStringInput("Enter the message by mentioning the DATE of Rollout");
                 jsonRequest.put("message", message);
                 break;
-            case 7:
+            case 8:
                 jsonRequest.put("chefAction", "VIEW_DISCARD_MENU_ITEMS");
                 break;
-            case 8:
-                return null;
             default:
                 return null;
         }
@@ -119,9 +121,12 @@ public class ChefClientController {
                     ConsolePrintUtils.finalVotingResult(jsonResponse.getJSONArray("votingResult"));
                     break;
                 case 6:
-                    System.out.println("Notification sent to employee");
+                    ConsolePrintUtils.printDiscardItemFeedback(jsonResponse.getJSONArray("discardFeedback"));
                     break;
                 case 7:
+                    System.out.println("Notification sent to employee");
+                    break;
+                case 8:
                     System.out.println("*************"+jsonResponse.getString("message")+"*************");
                     ConsolePrintUtils.printDiscardMenuItems(jsonResponse.getJSONArray("discardItems"));
                     break;
