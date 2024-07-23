@@ -5,15 +5,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 
-
+import CafeteriaClient.ClientServer.Constants.AdminAction;
 import CafeteriaClient.utils.ConsolePrintUtils;
 import CafeteriaClient.utils.ConsoleReadUtils;
 import CafeteriaClient.utils.MenuInputHelper;
 import org.json.JSONObject;
-
-import static CafeteriaClient.utils.ConsoleReadUtils.*;
-import static CafeteriaClient.utils.MenuInputHelper.*;
-
 
 public class AdminClientController {
 
@@ -28,23 +24,28 @@ public class AdminClientController {
 
         while (!exit) {
             System.out.println("Admin Actions:");
-            System.out.println("1. View Main Menu Item");
-            System.out.println("2. Add Menu Item");
-            System.out.println("3. Update Menu Item");
-            System.out.println("4. Delete Menu Item");
-            System.out.println("5. View Discard Menu Items");
-            System.out.println("6. Logout");
+            for (AdminAction action : AdminAction.values()) {
+                System.out.println(action.getValue() + ". " + action.getDescription());
+            }
 
             int choice = ConsoleReadUtils.getIntInput("Enter your choice: ");
+
+            AdminAction action;
+            try {
+                action = AdminAction.fromValue(choice);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid choice.");
+                continue;
+            }
 
             JSONObject jsonRequest = new JSONObject();
             jsonRequest.put("action", "ADMIN_ACTION");
 
-            switch (choice) {
-                case 1:
+            switch (action) {
+                case VIEW_MENU_ITEMS:
                     jsonRequest.put("adminAction", "VIEW_MENU_ITEMS");
                     break;
-                case 2:
+                case ADD_MENU_ITEM:
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     foodName = ConsoleReadUtils.getStringInput("Enter Food name: ");
                     price = ConsoleReadUtils.getBigDecimalInput("Enter Food price: ");
@@ -68,7 +69,8 @@ public class AdminClientController {
                     jsonRequest.put("sweetness", sweetness);
                     jsonRequest.put("category", category);
                     break;
-                case 3:
+
+                case UPDATE_MENU_ITEM:
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     foodName = ConsoleReadUtils.getStringInput("Enter Food name: ");
                     price = ConsoleReadUtils.getBigDecimalInput("Enter Food price: ");
@@ -92,17 +94,17 @@ public class AdminClientController {
                     jsonRequest.put("sweetness", sweetness);
                     jsonRequest.put("category", category);
                     break;
-                case 4:
+                case DELETE_MENU_ITEM:
                     foodId = ConsoleReadUtils.getIntInput("Enter Food Id: ");
                     jsonRequest.put("adminAction", "DELETE_MENU_ITEM");
                     jsonRequest.put("foodId", foodId);
                     break;
 
-                case 5:
+                case VIEW_DISCARD_MENU_ITEMS:
                     jsonRequest.put("adminAction", "VIEW_DISCARD_MENU_ITEMS");
                     break;
 
-                case 6:
+                case LOGOUT:
                     exit = true;
                     continue;
                 default:
@@ -116,30 +118,28 @@ public class AdminClientController {
 
             if (jsonResponse.getBoolean("success")) {
                 System.out.println("Action successful.");
-                if(choice == 1) {
-                    ConsolePrintUtils.printMenuItems(jsonResponse.getJSONArray("menu"));
+                switch (action) {
+                    case VIEW_MENU_ITEMS:
+                        ConsolePrintUtils.printMenuItems(jsonResponse.getJSONArray("menu"));
+                        break;
+                    case ADD_MENU_ITEM:
+                        if (jsonResponse.getBoolean("ItemExist")) {
+                            System.out.println("Food ID already exists. Please view the menu and use a unique Food ID.");
+                        } else {
+                            System.out.println("Successfully added food item to menu.");
+                        }
+                        break;
+                    case UPDATE_MENU_ITEM:
+                        System.out.println("Successfully updated food item in menu.");
+                        break;
+                    case DELETE_MENU_ITEM:
+                        System.out.println("Successfully deleted food item from menu.");
+                        break;
+                    case VIEW_DISCARD_MENU_ITEMS:
+                        System.out.println("*************" + jsonResponse.getString("message") + "*************");
+                        ConsolePrintUtils.printDiscardMenuItems(jsonResponse.getJSONArray("discardItems"));
+                        break;
                 }
-                else if(choice == 2) {
-                    if(jsonResponse.getBoolean("ItemExist"))
-                    {
-                        System.out.println("Food ID is already exist So please View menue and use Unique FoodID");
-                    }
-                    else
-                    {
-                        System.out.println("Successfully Added food item in menu");
-                    }
-                }
-                else if(choice == 3) {
-                    System.out.println("Successfully Updated food item in menu");
-                }
-                else if(choice == 4) {
-                    System.out.println("Successfully Deleted food item in menu");
-                }
-                else if(choice == 5) {
-                    System.out.println("*************"+jsonResponse.getString("message")+"*************");
-                    ConsolePrintUtils.printDiscardMenuItems(jsonResponse.getJSONArray("discardItems"));
-                }
-
             } else {
                 System.out.println("Action failed: " + jsonResponse.getString("error"));
             }

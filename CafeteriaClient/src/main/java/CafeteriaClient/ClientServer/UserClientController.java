@@ -1,30 +1,24 @@
 package CafeteriaClient.ClientServer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
+import CafeteriaClient.utils.ConsoleReadUtils;
 import org.json.JSONObject;
-
 
 public class UserClientController {
 
-    static void authenticateUser(Scanner scanner, PrintWriter writer, BufferedReader reader) throws IOException
-    {
-
+    static void authenticateUser(PrintWriter writer, BufferedReader reader) throws IOException {
         final int maxAttempts = 3;
         int attempts = 0;
         boolean isValidUser = false;
 
-        while (attempts < maxAttempts && !isValidUser)
-        {
-
-            System.out.print("Enter User ID: ");
-            String userId = scanner.nextLine();
-
-            System.out.print("Enter Password: ");
-            String password = scanner.nextLine();
+        while (attempts < maxAttempts && !isValidUser) {
+            String userId = ConsoleReadUtils.getStringInput("Enter User ID: ");
+            String password = ConsoleReadUtils.getStringInput("Enter password: ");
             JSONObject jsonRequest = new JSONObject();
+
             jsonRequest.put("action", "AUTHENTICATION");
             jsonRequest.put("userId", userId);
             jsonRequest.put("password", password);
@@ -32,11 +26,10 @@ public class UserClientController {
             writer.println(jsonRequest.toString());
 
             JSONObject jsonResponse = new JSONObject(reader.readLine());
-
             isValidUser = validateUser(jsonResponse);
             if (isValidUser) {
                 String role = jsonResponse.getString("role");
-                processRoleSpecificActions(role, writer, reader,userId);
+                processRoleSpecificActions(role, writer, reader, userId);
             } else {
                 attempts++;
                 System.out.println("Login failed: " + jsonResponse.getString("error"));
@@ -48,9 +41,7 @@ public class UserClientController {
         }
     }
 
-
-    private static boolean validateUser(JSONObject jsonResponse)
-    {
+    private static boolean validateUser(JSONObject jsonResponse) {
         boolean success = jsonResponse.getBoolean("success");
         if (success) {
             return true;
@@ -59,16 +50,17 @@ public class UserClientController {
         }
     }
 
-    private static void processRoleSpecificActions(String role, PrintWriter writer, BufferedReader reader, String userId) throws IOException {
+    private static void processRoleSpecificActions(String role, PrintWriter writer, BufferedReader reader,
+            String userId) throws IOException {
         switch (role) {
             case "Admin":
                 AdminClientController.handleAdminActions(writer, reader);
                 break;
             case "Chef":
-               ChefClientController.handleChefActions(writer, reader);
+                ChefClientController.handleChefActions(writer, reader);
                 break;
             case "Employee":
-               EmployeeClientController.handleEmployeeActions(writer, reader,userId);
+                EmployeeClientController.handleEmployeeActions(writer, reader, userId);
                 break;
             default:
                 System.out.println("Invalid role.");

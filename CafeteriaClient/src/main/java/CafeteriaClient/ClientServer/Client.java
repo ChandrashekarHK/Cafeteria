@@ -1,4 +1,5 @@
 package CafeteriaClient.ClientServer;
+
 import CafeteriaClient.utils.ConsoleReadUtils;
 
 import java.io.BufferedReader;
@@ -24,8 +25,7 @@ public class Client {
                     Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                    Scanner scanner = new Scanner(System.in)
-            ) {
+                    Scanner scanner = new Scanner(System.in)) {
                 System.out.println("Connected to the server.");
                 retryAttempts = 0;
 
@@ -36,7 +36,7 @@ public class Client {
                     int choice = ConsoleReadUtils.getIntInput("Enter your choice: ");
                     switch (choice) {
                         case 1:
-                            UserClientController.authenticateUser(scanner, writer, reader);
+                            UserClientController.authenticateUser(writer, reader);
                             break;
                         case 2:
                             logout = true;
@@ -46,9 +46,7 @@ public class Client {
                             System.out.println("Invalid choice. Please enter 1 or 2.");
                     }
                 }
-            }
-            catch (SocketException socketException)
-            {
+            } catch (SocketException socketException) {
                 System.out.println("Connection lost: " + socketException.getMessage());
                 retryAttempts++;
                 if (retryAttempts < MAX_RETRIES) {
@@ -63,9 +61,7 @@ public class Client {
                     System.out.println("Max retries reached. Could not reconnect to the server.");
                     break;
                 }
-            }
-            catch (IOException ioException)
-            {
+            } catch (IOException ioException) {
                 System.out.println("Unable to connect to server: " + ioException.getMessage());
                 retryAttempts++;
                 if (retryAttempts < MAX_RETRIES) {

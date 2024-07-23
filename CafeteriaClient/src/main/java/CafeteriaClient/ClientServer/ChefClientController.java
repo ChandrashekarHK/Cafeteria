@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import CafeteriaClient.ClientServer.Constants.ChefActions;
 import CafeteriaClient.utils.ConsolePrintUtils;
 import CafeteriaClient.utils.ConsoleReadUtils;
 import org.json.JSONArray;
@@ -18,21 +19,23 @@ public class ChefClientController {
         boolean exit = false;
         while (!exit) {
             System.out.println("Chef Actions:");
-            System.out.println("1. View Menu Items");
-            System.out.println("2. View Recommend Menu");
-            System.out.println("3. Add Items to Rollout Menu");
-            System.out.println("4. View Rollout Menu");
-            System.out.println("5. View Final Voting");
-            System.out.println("6. View Discard Menu ItemsFeedback ");
-            System.out.println("7. Send Notification");
-            System.out.println("8. View Discard Menu Items ");
-            System.out.println("9. Logout");
+            for (ChefActions action : ChefActions.values()) {
+                System.out.println(action.getValue() + ". " + action.getDescription());
+            }
 
             int choice = ConsoleReadUtils.getIntInput("Enter your choice: ");
 
-            JSONObject jsonRequest = createJsonRequest(choice);
+            ChefActions action;
+            try {
+                action = ChefActions.fromValue(choice);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid choice.");
+                continue;
+            }
+
+            JSONObject jsonRequest = createJsonRequest(action);
             if (jsonRequest == null) {
-                if (choice == 9) {
+                if (action == ChefActions.LOGOUT) {
                     exit = true;
                 } else {
                     System.out.println("Invalid choice.");
@@ -41,24 +44,24 @@ public class ChefClientController {
             }
 
             sendRequest(writer, jsonRequest);
-            handleResponse(reader, choice);
+            handleResponse(reader, action);
         }
     }
 
-    private static JSONObject createJsonRequest(int choice) {
+    private static JSONObject createJsonRequest(ChefActions action) {
         JSONObject jsonRequest = new JSONObject();
         jsonRequest.put("action", "CHEF_ACTION");
 
-        switch (choice) {
-            case 1:
+        switch (action) {
+            case VIEW_MENU_ITEMS:
                 jsonRequest.put("chefAction", "VIEW_MENU_ITEMS");
                 break;
-            case 2:
+            case VIEW_RECOMMENDED_MENU:
                 jsonRequest.put("chefAction", "VIEW_RECOMMENDED_MENU");
                 int numberOfFoodItems = ConsoleReadUtils.getIntInput("Enter number of items you want to get Recommendation: ");
                 jsonRequest.put("numberOfFoodItems", numberOfFoodItems);
                 break;
-            case 3:
+            case ADD_TO_ROLLOUT_MENU:
                 jsonRequest.put("chefAction", "ADD_TO_ROLLOUT_MENU");
                 int rolloutItemCount = ConsoleReadUtils.getIntInput("Enter number of items you want to Rollout: ");
                 jsonRequest.put("numberOfItems", rolloutItemCount);
@@ -73,24 +76,25 @@ public class ChefClientController {
                 LocalDateTime currentDate = LocalDateTime.now();
                 jsonRequest.put("RolloutDate", currentDate);
                 break;
-            case 4:
+            case VIEW_ROLLOUT_MENU:
                 jsonRequest.put("chefAction", "VIEW_ROLLOUT_MENU");
                 break;
-            case 5:
+            case VIEW_FINAL_VOTING:
                 jsonRequest.put("chefAction", "VIEW_FINAL_VOTING");
                 break;
-            case 6:
+            case VIEW_DISCARD_ITEM_FEEDBACK:
                 jsonRequest.put("chefAction", "VIEW_DISCARD_ITEM_FEEDBACK");
                 break;
-            case 7:
+            case SEND_NOTIFICATION:
                 jsonRequest.put("chefAction", "SEND_NOTIFICATION");
                 String message = ConsoleReadUtils.getStringInput("Enter the message by mentioning the DATE of Rollout");
                 jsonRequest.put("message", message);
                 break;
-            case 8:
+            case VIEW_DISCARD_MENU_ITEMS:
                 jsonRequest.put("chefAction", "VIEW_DISCARD_MENU_ITEMS");
                 break;
             default:
+                System.out.println("Invalid choice.");
                 return null;
         }
         return jsonRequest;
@@ -100,34 +104,34 @@ public class ChefClientController {
         writer.println(jsonRequest.toString());
     }
 
-    private static void handleResponse(BufferedReader reader, int choice) throws IOException {
+    private static void handleResponse(BufferedReader reader, ChefActions action) throws IOException {
         JSONObject jsonResponse = new JSONObject(reader.readLine());
         if (jsonResponse.getBoolean("success")) {
             System.out.println("Action successful.");
-            switch (choice) {
-                case 1:
+            switch (action) {
+                case VIEW_MENU_ITEMS:
                     ConsolePrintUtils.printMenuItems(jsonResponse.getJSONArray("menu"));
                     break;
-                case 2:
+                case VIEW_RECOMMENDED_MENU:
                     ConsolePrintUtils.printRecommendedMenu(jsonResponse.getJSONArray("recommendations"));
                     break;
-                case 3:
+                case ADD_TO_ROLLOUT_MENU:
                     System.out.println("Successfully added Item Rollout Menu");
                     break;
-                case 4:
+                case VIEW_ROLLOUT_MENU:
                     ConsolePrintUtils.printRolloutMenuItems(jsonResponse.getJSONArray("rolloutItems"));
                     break;
-                case 5:
+                case VIEW_FINAL_VOTING:
                     ConsolePrintUtils.finalVotingResult(jsonResponse.getJSONArray("votingResult"));
                     break;
-                case 6:
+                case VIEW_DISCARD_ITEM_FEEDBACK:
                     ConsolePrintUtils.printDiscardItemFeedback(jsonResponse.getJSONArray("discardFeedback"));
                     break;
-                case 7:
+                case SEND_NOTIFICATION:
                     System.out.println("Notification sent to employee");
                     break;
-                case 8:
-                    System.out.println("*************"+jsonResponse.getString("message")+"*************");
+                case VIEW_DISCARD_MENU_ITEMS:
+                    System.out.println("*************" + jsonResponse.getString("message") + "*************");
                     ConsolePrintUtils.printDiscardMenuItems(jsonResponse.getJSONArray("discardItems"));
                     break;
             }
