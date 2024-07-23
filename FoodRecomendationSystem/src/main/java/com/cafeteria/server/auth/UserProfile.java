@@ -13,8 +13,8 @@ public class UserProfile {
     private String cuisineType;
     private LocalDateTime createdAt;
 
-
-    public UserProfile(String userId, String foodType, int spiceLevel, int sweetness, int saltiness, String cuisineType) {
+    public UserProfile(String userId, String foodType, int spiceLevel, int sweetness, int saltiness,
+            String cuisineType) {
         this.userId = userId;
         this.foodType = foodType;
         this.spiceLevel = spiceLevel;
@@ -23,8 +23,8 @@ public class UserProfile {
         this.cuisineType = cuisineType;
     }
 
-
-    public UserProfile(int profileID, String userId, String foodType, int spiceLevel, int sweetness, int saltiness, String cuisineType, LocalDateTime createdAt) {
+    public UserProfile(int profileID, String userId, String foodType, int spiceLevel, int sweetness, int saltiness,
+            String cuisineType, LocalDateTime createdAt) {
         this.profileID = profileID;
         this.userId = userId;
         this.foodType = foodType;
@@ -35,7 +35,6 @@ public class UserProfile {
         this.createdAt = createdAt;
     }
 
-    // Getters and setters for all fields
     public int getProfileID() {
         return profileID;
     }
@@ -51,7 +50,6 @@ public class UserProfile {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
 
     public String getFoodType() {
         return foodType;
@@ -101,18 +99,4 @@ public class UserProfile {
         this.createdAt = createdAt;
     }
 
-    // Optional: Override toString() method for debugging purposes
-    @Override
-    public String toString() {
-        return "UserProfile{" +
-                "profileID=" + profileID +
-                ", userName='" + userName + '\'' +
-                ", foodType='" + foodType + '\'' +
-                ", spiceLevel=" + spiceLevel +
-                ", sweetness=" + sweetness +
-                ", saltiness=" + saltiness +
-                ", cuisineType='" + cuisineType + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
-    }
 }

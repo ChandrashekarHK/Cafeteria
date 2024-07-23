@@ -1,4 +1,5 @@
 package com.cafeteria.server.db;
+
 import com.cafeteria.server.menu.MenuItem;
 
 import java.sql.Connection;
@@ -11,18 +12,15 @@ import java.util.List;
 
 public class DBMenuItemService {
 
-
     public DBMenuItemService() {
 
     }
 
-
-    public boolean addMenuItem(MenuItem menuItem)  {
+    public boolean addMenuItem(MenuItem menuItem) {
 
         String query = "INSERT INTO MenuItem (foodItemId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness, sweetness, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(query))
-        {
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, menuItem.getFoodItemID());
             preparedStatement.setString(2, menuItem.getName());
             preparedStatement.setBigDecimal(3, menuItem.getPrice());
@@ -40,14 +38,13 @@ public class DBMenuItemService {
         }
     }
 
-    public List<MenuItem> readAllMenuItems(){
+    public List<MenuItem> readAllMenuItems() {
 
         String query = "SELECT * FROM MenuItem";
         List<MenuItem> menuItems = new ArrayList<>();
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery())
-        {
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 int foodItemId = resultSet.getInt("foodItemId");
                 String name = resultSet.getString("name");
@@ -55,11 +52,12 @@ public class DBMenuItemService {
                 boolean availability = resultSet.getBoolean("availability");
                 String cuisineType = resultSet.getString("cuisineType");
                 int spiceLevel = resultSet.getInt("spiceLevel");
-                String  foodType = resultSet.getString("foodType");
+                String foodType = resultSet.getString("foodType");
                 int saltiness = resultSet.getInt("saltiness");
-                int  sweetness = resultSet.getInt("sweetness");
-                String  category = resultSet.getString("category");
-                MenuItem menuItem = new MenuItem(foodItemId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness, sweetness, category);
+                int sweetness = resultSet.getInt("sweetness");
+                String category = resultSet.getString("category");
+                MenuItem menuItem = new MenuItem(foodItemId, name, price, availability, cuisineType, spiceLevel,
+                        foodType, saltiness, sweetness, category);
                 menuItems.add(menuItem);
             }
         } catch (SQLException e) {
@@ -71,7 +69,7 @@ public class DBMenuItemService {
     public boolean updateMenuItem(MenuItem menuItem) {
         String query = "UPDATE MenuItem SET name = ?, price = ?, availability = ?, cuisineType = ?, spiceLevel = ?, foodType = ?, saltiness = ?, sweetness = ?, category = ? WHERE foodItemId = ?";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, menuItem.getName());
             stmt.setBigDecimal(2, menuItem.getPrice());
             stmt.setBoolean(3, menuItem.getAvailability());
@@ -93,7 +91,7 @@ public class DBMenuItemService {
     public boolean isFoodItemIdPresent(int foodItemId) {
         String query = "SELECT COUNT(*) FROM MenuItem WHERE foodItemId = ?";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, foodItemId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -108,8 +106,8 @@ public class DBMenuItemService {
 
     public boolean deleteMenuItem(int foodItemId) {
         String query = "DELETE FROM MenuItem WHERE foodItemId = ?";
-        try ( Connection connection = DatabaseConnector.getInstance().getConnection();
-              PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnector.getInstance().getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, foodItemId);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected == 1;
@@ -118,10 +116,11 @@ public class DBMenuItemService {
             return false;
         }
     }
+
     public MenuItem getMenuItemById(int foodItemId) {
         String query = "SELECT * FROM MenuItem WHERE foodItemId = ?";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, foodItemId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -135,7 +134,8 @@ public class DBMenuItemService {
                     int sweetness = rs.getInt("sweetness");
                     String category = rs.getString("category");
 
-                    return new MenuItem(foodItemId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness, sweetness, category);
+                    return new MenuItem(foodItemId, name, price, availability, cuisineType, spiceLevel, foodType,
+                            saltiness, sweetness, category);
                 }
             }
         } catch (SQLException e) {

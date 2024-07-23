@@ -1,6 +1,5 @@
 package com.cafeteria.server.feedback;
 
-
 import java.sql.Timestamp;
 
 public class VotingItem {
@@ -11,7 +10,7 @@ public class VotingItem {
     private Timestamp date;
     private int rolloutID;
 
-    public VotingItem(int votingId, int foodItemId, int vote, String voterUserId, Timestamp date,int rolloutID) {
+    public VotingItem(int votingId, int foodItemId, int vote, String voterUserId, Timestamp date, int rolloutID) {
         this.votingId = votingId;
         this.foodItemId = foodItemId;
         this.vote = vote;

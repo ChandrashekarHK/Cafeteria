@@ -9,8 +9,8 @@ import java.util.List;
 
 public class DBNotificationService {
 
-    public DBNotificationService() throws SQLException {
-        // Initialization if necessary
+    public DBNotificationService() {
+
     }
 
     public List<Notification> viewRecentNotifications() {
@@ -21,7 +21,7 @@ public class DBNotificationService {
         List<Notification> notifications = new ArrayList<>();
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setTimestamp(1, timestampThreeDaysAgo);
             ResultSet resultSet = stmt.executeQuery();
 
@@ -29,8 +29,7 @@ public class DBNotificationService {
                 Notification notification = new Notification(
                         resultSet.getInt("notificationId"),
                         resultSet.getString("message"),
-                        resultSet.getTimestamp("date")
-                );
+                        resultSet.getTimestamp("date"));
                 notifications.add(notification);
             }
         } catch (SQLException e) {
@@ -44,7 +43,7 @@ public class DBNotificationService {
         Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, message);
             stmt.setTimestamp(2, currentDate);
             int rowsAffected = stmt.executeUpdate();

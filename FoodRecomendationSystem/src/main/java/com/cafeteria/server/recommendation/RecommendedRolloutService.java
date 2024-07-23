@@ -7,17 +7,15 @@ import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
 import com.cafeteria.server.menu.RolloutMenuItem;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
-
 
 public class RecommendedRolloutService {
     private DBRolloutMenuService dbRolloutMenuService;
     private DBUserProfileService dbUserProfileService;
     private MenuService menuService;
 
-    public RecommendedRolloutService() throws SQLException {
+    public RecommendedRolloutService() {
         this.dbRolloutMenuService = new DBRolloutMenuService();
         this.dbUserProfileService = new DBUserProfileService();
         this.menuService = new MenuService();
@@ -40,11 +38,12 @@ public class RecommendedRolloutService {
         return Integer.compare(score2, score1);
     }
 
-    private List<RolloutMenuItem> sortRolloutMenuItems(List<RolloutMenuItem> rolloutMenuItems, UserProfile userProfile) {
+    private List<RolloutMenuItem> sortRolloutMenuItems(List<RolloutMenuItem> rolloutMenuItems,
+            UserProfile userProfile) {
         List<RolloutMenuItem> sortedRolloutMenuItems = new ArrayList<>(rolloutMenuItems);
         sortedRolloutMenuItems.sort((item1, item2) -> {
             MenuItem food1 = menuService.getMenuIteamByFoodId(item1.getFoodId());
-            MenuItem food2 =  menuService.getMenuIteamByFoodId(item2.getFoodId());
+            MenuItem food2 = menuService.getMenuIteamByFoodId(item2.getFoodId());
             return compareFoodItems(userProfile, food1, food2);
         });
         return sortedRolloutMenuItems;
@@ -72,4 +71,3 @@ public class RecommendedRolloutService {
     }
 
 }
-

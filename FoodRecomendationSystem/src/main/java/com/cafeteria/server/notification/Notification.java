@@ -25,12 +25,4 @@ public class Notification {
         return date;
     }
 
-    @Override
-    public String toString() {
-        return "Notification{" +
-                "id=" + notificationId +
-                ", message='" + message + '\'' +
-                ", date=" + date +
-                '}';
-    }
 }

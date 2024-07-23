@@ -8,15 +8,15 @@ import java.util.List;
 
 public class DBDiscardMenuService {
 
-
     public DBDiscardMenuService() {
 
     }
+
     public void addDiscardItem(DiscardMenuItem discardItem) throws SQLException {
         String sql = "INSERT INTO DiscardFoodItem (foodItemId, foodName, averageRating, discardDate) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, discardItem.getFoodId());
             pstmt.setString(2, discardItem.getName());
             pstmt.setDouble(3, discardItem.getAverageRating());
@@ -26,13 +26,13 @@ public class DBDiscardMenuService {
         }
     }
 
-    public List<DiscardMenuItem> getAllDiscardItems(){
+    public List<DiscardMenuItem> getAllDiscardItems() {
         String sql = "SELECT * FROM DiscardFoodItem";
         List<DiscardMenuItem> discardItems = new ArrayList<>();
 
-        try (Connection connection = DatabaseConnector.getInstance(). getConnection();
+        try (Connection connection = DatabaseConnector.getInstance().getConnection();
                 Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 DiscardMenuItem discardItem = new DiscardMenuItem();

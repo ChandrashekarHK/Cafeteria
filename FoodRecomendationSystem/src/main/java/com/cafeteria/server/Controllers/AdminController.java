@@ -1,4 +1,5 @@
 package com.cafeteria.server.Controllers;
+
 import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.userOperations.AdminService;
 
@@ -10,26 +11,24 @@ public class AdminController {
     private AdminService adminService;
 
     public AdminController() throws SQLException {
-        this.adminService =new AdminService();
-
+        this.adminService = new AdminService();
     }
 
     public JSONObject handleAdminActions(JSONObject jsonRequest) throws SQLException {
         String adminAction = jsonRequest.getString("adminAction");
         JSONObject jsonResponse = new JSONObject();
 
-        int foodId ;
-        String name ;
+        int foodId;
+        String name;
         BigDecimal price;
-        boolean availability ;
+        boolean availability;
         MenuItem item;
         String cuisineType;
-        int spiceLevel ;
-        String foodType ;
+        int spiceLevel;
+        String foodType;
         int saltiness;
-        int sweetness ;
-        String category ;
-
+        int sweetness;
+        String category;
 
         switch (adminAction) {
             case "VIEW_MENU_ITEMS":
@@ -48,7 +47,8 @@ public class AdminController {
                 sweetness = jsonRequest.getInt("sweetness");
                 category = jsonRequest.getString("category");
 
-                item = new MenuItem(foodId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness, sweetness, category);
+                item = new MenuItem(foodId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness,
+                        sweetness, category);
                 jsonResponse = adminService.addMenuItem(item);
                 break;
 
@@ -63,8 +63,9 @@ public class AdminController {
                 saltiness = jsonRequest.getInt("saltiness");
                 sweetness = jsonRequest.getInt("sweetness");
                 category = jsonRequest.getString("category");
-                item = new MenuItem(foodId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness, sweetness, category);
-                jsonResponse =  adminService.updateMenuItem(item);
+                item = new MenuItem(foodId, name, price, availability, cuisineType, spiceLevel, foodType, saltiness,
+                        sweetness, category);
+                jsonResponse = adminService.updateMenuItem(item);
 
                 break;
 

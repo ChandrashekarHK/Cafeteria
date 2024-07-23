@@ -17,6 +17,7 @@ public class ReportService {
     private FeedbackService feedbackService;
     private SentimentAnalysisService sentimentAnalysisService;
     private MenuService menuService;
+
     public ReportService() throws SQLException {
         this.feedbackService = new FeedbackService();
         this.sentimentAnalysisService = new SentimentAnalysisService();
@@ -41,7 +42,7 @@ public class ReportService {
                 sum += feedback.getRating();
             }
             double average = sum / feedbacks.size();
-            averageRatings.put(foodItemId, Math.min(5.0, Math.max(1.0, Math.round(average * 10) / 10.0)));  // Ensure rating is between 1 and 5
+            averageRatings.put(foodItemId, Math.min(5.0, Math.max(1.0, Math.round(average * 10) / 10.0)));
         }
         return averageRatings;
     }
@@ -58,15 +59,13 @@ public class ReportService {
 
         List<JSONObject> recommendations = new ArrayList<>();
 
-        for (Map.Entry<Integer, Double> entry : averageRatings.entrySet())
-        {
+        for (Map.Entry<Integer, Double> entry : averageRatings.entrySet()) {
             int foodItemId = entry.getKey();
             double averageRating = entry.getValue();
             List<String> comments = groupedFeedback.get(foodItemId).stream()
                     .map(FeedbackItem::getComments)
                     .collect(Collectors.toList());
 
-            // For demonstration, assume you have a method to get the food item details by ID
             MenuItem foodItem = menuService.getMenuIteamByFoodId(foodItemId);
 
             String framedSentiment = null;
@@ -83,7 +82,7 @@ public class ReportService {
             recommendations.add(recommendation);
         }
 
-        JSONArray sortedRecommendations = sortRecommendations(recommendations,topN);
+        JSONArray sortedRecommendations = sortRecommendations(recommendations, topN);
 
         JSONObject response = new JSONObject();
         response.put("recommendations", sortedRecommendations);
@@ -93,12 +92,13 @@ public class ReportService {
     public static JSONArray sortRecommendations(List<JSONObject> recommendations, int topN) {
         return new JSONArray(
                 recommendations.stream()
-                        .sorted(Comparator.comparingDouble(recommendation -> ((JSONObject) recommendation).optDouble("averageRating", 0.0)).reversed())
+                        .sorted(Comparator
+                                .comparingDouble(
+                                        recommendation -> ((JSONObject) recommendation).optDouble("averageRating", 0.0))
+                                .reversed())
                         .limit(topN)
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()));
 
     }
-
 
 }

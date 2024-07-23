@@ -6,11 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBVotingservice {
+public class DBVotingService {
 
-  //  private Connection connection;
-    public DBVotingservice() throws SQLException {
-       // this.connection = DatabaseConnector.getConnection();
+    public DBVotingService() throws SQLException {
+
     }
 
     public List<VotingItem> getAllVoting() {
@@ -18,8 +17,8 @@ public class DBVotingservice {
         List<VotingItem> votingList = new ArrayList<>();
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 int votingId = rs.getInt("voteID");
@@ -29,7 +28,7 @@ public class DBVotingservice {
                 Timestamp date = rs.getTimestamp("voteDate");
                 int rolloutID = rs.getInt("RolloutID");
 
-                VotingItem votingItem = new VotingItem(votingId, foodItemId, vote, voterUserId, date,rolloutID);
+                VotingItem votingItem = new VotingItem(votingId, foodItemId, vote, voterUserId, date, rolloutID);
                 votingList.add(votingItem);
             }
         } catch (SQLException e) {
@@ -38,25 +37,24 @@ public class DBVotingservice {
         return votingList;
     }
 
-        public boolean addVotingrecord(VotingItem votingItem) {
-            String query = "INSERT INTO Voting (foodItemId, vote, rolloutID, userID, voteDate) VALUES (?, ?, ?, ?, ?)";
+    public boolean addVotingRecord(VotingItem votingItem) {
+        String query = "INSERT INTO Voting (foodItemId, vote, rolloutID, userID, voteDate) VALUES (?, ?, ?, ?, ?)";
 
-            try (Connection connection = DatabaseConnector.getInstance().getConnection();
-                 PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setInt(1, votingItem.getFoodItemId());
-                stmt.setInt(2, votingItem.getVote());
-                stmt.setInt(3, votingItem.getRolloutID());
-                stmt.setString(4, votingItem.getVoterUserId());
-                stmt.setTimestamp(5, votingItem.getDate());
+        try (Connection connection = DatabaseConnector.getInstance().getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, votingItem.getFoodItemId());
+            stmt.setInt(2, votingItem.getVote());
+            stmt.setInt(3, votingItem.getRolloutID());
+            stmt.setString(4, votingItem.getVoterUserId());
+            stmt.setTimestamp(5, votingItem.getDate());
 
-                int rowsAffected = stmt.executeUpdate();
-                return rowsAffected == 1;
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected == 1;
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-
+    }
 
 }

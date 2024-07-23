@@ -18,12 +18,10 @@ import java.util.List;
 
 public class EmployeeController {
 
-
     private EmployeeService employeeService;
 
-
     public EmployeeController() throws SQLException {
-        this.employeeService  = new EmployeeService();
+        this.employeeService = new EmployeeService();
 
     }
 
@@ -35,36 +33,35 @@ public class EmployeeController {
         String userId;
         int vote;
         Timestamp date;
-        int rolloutId ;
-        int autoIncerementedID =0;
+        int rolloutId;
+        int autoIncerementedID = 0;
         float rating;
         String cuisineType;
-        int spiceLevel ;
-        String foodType ;
+        int spiceLevel;
+        String foodType;
         int saltiness;
-        int sweetness ;
-
+        int sweetness;
 
         switch (chefAction) {
             case "VIEW_MENU_ITEMS":
-                jsonResponse= employeeService.viewMenu();
+                jsonResponse = employeeService.viewMenu();
                 break;
 
             case "VIEW_RECOMMENDED_MENU":
                 int numberOfItems = jsonRequest.getInt("numberOfFoodItems");
-                boolean sentimentNecessity = false;//jsonRequest.getBoolean("sentimentNecessity");
-                jsonResponse = employeeService.viewRecommendations(numberOfItems,sentimentNecessity);
+                boolean sentimentNecessity = false;
+                jsonResponse = employeeService.viewRecommendations(numberOfItems, sentimentNecessity);
                 break;
 
             case "VOTE_ROLLOUT_ITEMS":
-                 foodId = jsonRequest.getInt("foodId");
-                 userId = jsonRequest.getString("userId");
-                 vote = jsonRequest.getInt("vote");
-                 date = Timestamp.valueOf(jsonRequest.getString("date"));
-                 rolloutId = jsonRequest.getInt("rolloutId");
-                 autoIncerementedID =0;
-                VotingItem voteItem = new VotingItem(autoIncerementedID,foodId,vote,userId,date,rolloutId);
-                jsonResponse= employeeService.castVote(voteItem);
+                foodId = jsonRequest.getInt("foodId");
+                userId = jsonRequest.getString("userId");
+                vote = jsonRequest.getInt("vote");
+                date = Timestamp.valueOf(jsonRequest.getString("date"));
+                rolloutId = jsonRequest.getInt("rolloutId");
+                autoIncerementedID = 0;
+                VotingItem voteItem = new VotingItem(autoIncerementedID, foodId, vote, userId, date, rolloutId);
+                jsonResponse = employeeService.castVote(voteItem);
 
                 break;
 
@@ -76,7 +73,8 @@ public class EmployeeController {
                 saltiness = jsonRequest.getInt("saltiness");
                 sweetness = jsonRequest.getInt("sweetness");
 
-                UserProfile userProfile = new UserProfile(userId,foodType,spiceLevel,sweetness,saltiness,cuisineType);
+                UserProfile userProfile = new UserProfile(userId, foodType, spiceLevel, sweetness, saltiness,
+                        cuisineType);
                 jsonResponse = employeeService.saveUserProfile(userProfile);
 
                 break;
@@ -89,21 +87,22 @@ public class EmployeeController {
                 break;
             case "PROVIDE_FEEDBACK":
                 foodId = jsonRequest.getInt("foodId");
-                String comment= jsonRequest.getString("comment");
+                String comment = jsonRequest.getString("comment");
                 rating = jsonRequest.getFloat("rating");
                 date = Timestamp.valueOf(jsonRequest.getString("date"));
                 userId = jsonRequest.getString("userId");
-                FeedbackItem feedbackItem = new FeedbackItem(autoIncerementedID,foodId,rating,comment,userId,date);
+                FeedbackItem feedbackItem = new FeedbackItem(autoIncerementedID, foodId, rating, comment, userId, date);
                 jsonResponse = employeeService.addFeedback(feedbackItem);
                 break;
 
             case "PROVIDE_DISCARD_ITEM_FEEDBACK":
                 int discardId = jsonRequest.getInt("discardId");
-                String answerOne= jsonRequest.getString("answerOne");
-                String answerTwo= jsonRequest.getString("answerTwo");
-                String answerThree= jsonRequest.getString("answerThree");
+                String answerOne = jsonRequest.getString("answerOne");
+                String answerTwo = jsonRequest.getString("answerTwo");
+                String answerThree = jsonRequest.getString("answerThree");
                 userId = jsonRequest.getString("userId");
-                DiscardItemFeedback discardItemFeedback = new DiscardItemFeedback(userId,discardId,answerOne,answerTwo,answerThree);
+                DiscardItemFeedback discardItemFeedback = new DiscardItemFeedback(userId, discardId, answerOne,
+                        answerTwo, answerThree);
                 jsonResponse = employeeService.addDiscardItemFeedback(discardItemFeedback);
                 break;
 
@@ -115,7 +114,5 @@ public class EmployeeController {
 
         return jsonResponse;
     }
-
-
 
 }

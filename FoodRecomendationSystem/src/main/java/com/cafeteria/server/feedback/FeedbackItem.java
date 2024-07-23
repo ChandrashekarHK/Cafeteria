@@ -1,6 +1,5 @@
 package com.cafeteria.server.feedback;
 
-
 import java.sql.Timestamp;
 
 public class FeedbackItem {
@@ -11,7 +10,7 @@ public class FeedbackItem {
     private String userID;
     private Timestamp date;
 
-    public FeedbackItem(int feedbackId, int foodItemId, float rating, String comments,String userID,Timestamp date) {
+    public FeedbackItem(int feedbackId, int foodItemId, float rating, String comments, String userID, Timestamp date) {
         this.feedbackId = feedbackId;
         this.foodItemId = foodItemId;
         this.userID = userID;
@@ -68,6 +67,7 @@ public class FeedbackItem {
         this.date = date;
     }
 
+    // Optional: Override toString() method for debugging purposes
     @Override
     public String toString() {
         return "FeedbackItem{" +

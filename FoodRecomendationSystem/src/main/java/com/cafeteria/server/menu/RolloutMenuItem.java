@@ -31,7 +31,6 @@ public class RolloutMenuItem {
         return rolloutDate;
     }
 
-    // Setters
     public void setFoodId(int foodId) {
         this.foodId = foodId;
     }
@@ -48,6 +47,7 @@ public class RolloutMenuItem {
         this.rolloutDate = rolloutDate;
     }
 
+    // Optional: Override toString() method for debugging purposes
     @Override
     public String toString() {
         return "Food Item ID: " + foodId +

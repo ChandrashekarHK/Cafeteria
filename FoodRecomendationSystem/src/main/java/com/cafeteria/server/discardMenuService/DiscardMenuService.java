@@ -7,7 +7,6 @@ import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
 import com.cafeteria.server.recommendation.ReportService;
 import com.cafeteria.server.recommendation.SentimentAnalysisService;
-import org.json.JSONArray;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,6 +19,7 @@ public class DiscardMenuService extends ReportService {
     private FeedbackService feedbackService;
     private SentimentAnalysisService sentimentAnalysisService;
     private MenuService menuService;
+
     public DiscardMenuService() throws SQLException {
         super();
         this.dbDiscardMenuService = new DBDiscardMenuService();
@@ -28,11 +28,10 @@ public class DiscardMenuService extends ReportService {
         this.menuService = new MenuService();
     }
 
-    public void createAndSaveDiscardItems() throws SQLException {
+    public void discardLowRatedMenuItems() throws SQLException {
         List<FeedbackItem> feedbackList = feedbackService.viewRecentFeedback();
         Map<Integer, List<FeedbackItem>> groupedFeedback = groupFeedbackByFoodItem(feedbackList);
         Map<Integer, Double> averageRatings = calculateAverageRatings(groupedFeedback);
-
 
         for (Map.Entry<Integer, Double> entry : averageRatings.entrySet()) {
             int foodItemId = entry.getKey();

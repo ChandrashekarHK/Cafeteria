@@ -10,7 +10,8 @@ public class FoodItemRecommendation {
     private double averageRating;
     private String framedSentiment;
 
-    public FoodItemRecommendation(int foodId, String name, BigDecimal price, double averageRating, String framedSentiment) {
+    public FoodItemRecommendation(int foodId, String name, BigDecimal price, double averageRating,
+            String framedSentiment) {
         this.foodId = foodId;
         this.name = name;
         this.price = price;

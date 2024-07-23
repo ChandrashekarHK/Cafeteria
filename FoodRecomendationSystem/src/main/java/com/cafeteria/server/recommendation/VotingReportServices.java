@@ -1,6 +1,6 @@
 package com.cafeteria.server.recommendation;
 
-import com.cafeteria.server.db.DBVotingservice;
+import com.cafeteria.server.db.DBVotingService;
 import com.cafeteria.server.feedback.VotingItem;
 import com.cafeteria.server.menu.MenuItem;
 import com.cafeteria.server.menu.MenuService;
@@ -14,11 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 public class VotingReportServices {
-    private DBVotingservice voterService;
+    private DBVotingService voterService;
     private MenuService menuService;
+
     public VotingReportServices() throws SQLException {
-        this.voterService = new DBVotingservice();
-        this.menuService=new MenuService();
+        this.voterService = new DBVotingService();
+        this.menuService = new MenuService();
     }
 
     public Map<Integer, List<VotingItem>> groupVotingByFoodItem(List<VotingItem> votingList) {
@@ -29,40 +30,37 @@ public class VotingReportServices {
         return groupedVoting;
     }
 
-    public Map<Integer, Double> calculateAverageVotes(Map<Integer, List<VotingItem>> groupedVoting) {
-        Map<Integer, Double> averageVotes = new HashMap<>();
+    public Map<Integer, Double> calculateTotalVotes(Map<Integer, List<VotingItem>> groupedVoting) {
+        Map<Integer, Double> totalVotes = new HashMap<>();
         for (Map.Entry<Integer, List<VotingItem>> entry : groupedVoting.entrySet()) {
             int foodItemId = entry.getKey();
-            List<VotingItem> votings = entry.getValue();
-            double sum = 0;
-            for (VotingItem voting : votings) {
-                sum += voting.getVote();
+            List<VotingItem> votes = entry.getValue();
+            double totalNumberOfVotes = 0;
+            for (VotingItem voting : votes) {
+                totalNumberOfVotes += voting.getVote();
             }
-            double average = sum / votings.size();
-            averageVotes.put(foodItemId, average);
+            totalVotes.put(foodItemId, totalNumberOfVotes);
         }
-        return averageVotes;
+        return totalVotes;
     }
-
-
 
     public JSONObject getVotingResults() {
         List<VotingItem> votingList = voterService.getAllVoting();
         Map<Integer, List<VotingItem>> groupedVoting = groupVotingByFoodItem(votingList);
-        Map<Integer, Double> averageVotes = calculateAverageVotes(groupedVoting);
+        Map<Integer, Double> totalVotes = calculateTotalVotes(groupedVoting);
 
         JSONArray votingResultsArray = new JSONArray();
 
-        for (Map.Entry<Integer, Double> entry : averageVotes.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : totalVotes.entrySet()) {
             int foodItemId = entry.getKey();
-            double averageVote = entry.getValue();
+            double totalNumberOfVotes = entry.getValue();
 
             MenuItem menuItem = menuService.getMenuIteamByFoodId(foodItemId);
 
             JSONObject votingResult = new JSONObject();
             votingResult.put("foodId", menuItem.getFoodItemID());
             votingResult.put("foodName", menuItem.getName());
-            votingResult.put("averageVote", averageVote);
+            votingResult.put("totalVotes", totalNumberOfVotes);
             votingResultsArray.put(votingResult);
         }
 

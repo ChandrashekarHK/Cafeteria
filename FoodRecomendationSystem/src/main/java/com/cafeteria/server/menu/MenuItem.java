@@ -14,7 +14,8 @@ public class MenuItem {
     private int sweetness;
     private String category;
 
-    public MenuItem(int foodItemID, String name, BigDecimal price, boolean availability, String cuisineType, int spiceLevel, String foodType, int saltiness, int sweetness, String category) {
+    public MenuItem(int foodItemID, String name, BigDecimal price, boolean availability, String cuisineType,
+            int spiceLevel, String foodType, int saltiness, int sweetness, String category) {
         this.foodItemID = foodItemID;
         this.name = name;
         this.price = price;
@@ -27,7 +28,6 @@ public class MenuItem {
         this.category = category;
     }
 
-    // Getters and setters for all fields
     public int getFoodItemID() {
         return foodItemID;
     }
@@ -108,4 +108,3 @@ public class MenuItem {
         this.category = category;
     }
 }
-

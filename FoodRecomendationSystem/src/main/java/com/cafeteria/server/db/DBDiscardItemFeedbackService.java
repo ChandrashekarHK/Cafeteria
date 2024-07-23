@@ -13,8 +13,8 @@ public class DBDiscardItemFeedbackService {
         List<DiscardItemFeedback> feedbacks = new ArrayList<>();
 
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet resultSet = stmt.executeQuery()) {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet resultSet = stmt.executeQuery()) {
 
             while (resultSet != null && resultSet.next()) {
                 DiscardItemFeedback feedback = new DiscardItemFeedback(
@@ -23,8 +23,7 @@ public class DBDiscardItemFeedbackService {
                         resultSet.getInt("discardID"),
                         resultSet.getString("Q1"),
                         resultSet.getString("Q2"),
-                        resultSet.getString("Q3")
-                );
+                        resultSet.getString("Q3"));
                 feedbacks.add(feedback);
             }
         } catch (SQLException e) {

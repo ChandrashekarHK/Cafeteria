@@ -28,7 +28,8 @@ public class SentimentAnalysisService {
                 }
             }
             sentimentScores.put(foodItemId, totalSentimentScore);
-            System.out.println("Food Item ID: " + foodItemId + " Positive Comments: " + positiveCount + " Negative Comments: " + negativeCount);
+            System.out.println("Food Item ID: " + foodItemId + " Positive Comments: " + positiveCount
+                    + " Negative Comments: " + negativeCount);
         }
         return sentimentScores;
     }
@@ -59,7 +60,8 @@ public class SentimentAnalysisService {
     public String frameSentiment(List<FeedbackItem> feedbacks) {
         StringBuilder framedSentiment = new StringBuilder();
         for (FeedbackItem feedback : feedbacks) {
-            framedSentiment.append(feedback.getComments()).append(" (").append(determineSentiment(feedback.getComments())).append(") ").append("\n");
+            framedSentiment.append(feedback.getComments()).append(" (")
+                    .append(determineSentiment(feedback.getComments())).append(") ").append("\n");
         }
         return framedSentiment.toString().trim();
     }

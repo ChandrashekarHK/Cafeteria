@@ -7,20 +7,16 @@ import java.util.List;
 
 public class DiscardItemFeedbackService {
     private DBDiscardItemFeedbackService dbDiscardItemFeedbackService;
-    private DBUserProfileService dbUserProfileService;
 
-    public DiscardItemFeedbackService()
-    {
+    public DiscardItemFeedbackService() {
         this.dbDiscardItemFeedbackService = new DBDiscardItemFeedbackService();
-        this.dbUserProfileService = new DBUserProfileService();
     }
 
     public boolean addDiscardItemFeedback(DiscardItemFeedback feedback) {
         return dbDiscardItemFeedbackService.addDiscardItemFeedback(feedback);
     }
 
-    public List<DiscardItemFeedback> getAllFeedback()
-    {
+    public List<DiscardItemFeedback> getAllFeedback() {
         List<DiscardItemFeedback> allFeedback = dbDiscardItemFeedbackService.getAllFeedbacks();
 
         return allFeedback;

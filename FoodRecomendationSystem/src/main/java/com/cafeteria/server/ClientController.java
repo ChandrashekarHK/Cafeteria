@@ -32,11 +32,11 @@ public class ClientController implements Runnable {
     @Override
     public void run() {
         int retryAttempts = 3;
-        int retryDelay = 3000;
+        final int retryDelay = 4000;
 
         while (retryAttempts > 0) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                    PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
                 String request;
                 while ((request = reader.readLine()) != null) {

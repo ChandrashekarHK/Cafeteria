@@ -13,15 +13,14 @@ import com.cafeteria.server.userOperations.ChefService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ChefController
-{
+public class ChefController {
     private ChefService chefService;
     private MenuService menuService;
+
     public ChefController() throws SQLException {
         this.chefService = new ChefService();
         this.menuService = new MenuService();
     }
-
 
     public JSONObject handleChefActions(JSONObject jsonRequest) throws SQLException {
         String chefAction = jsonRequest.getString("chefAction");
@@ -30,13 +29,13 @@ public class ChefController
 
         switch (chefAction) {
             case "VIEW_MENU_ITEMS":
-                jsonResponse= chefService.viewMenu();
+                jsonResponse = chefService.viewMenu();
                 break;
 
             case "VIEW_RECOMMENDED_MENU":
                 int numberOfItems = jsonRequest.getInt("numberOfFoodItems");
                 boolean sentimentNecessity = false;
-               jsonResponse = chefService.viewRecommendations(numberOfItems,sentimentNecessity);
+                jsonResponse = chefService.viewRecommendations(numberOfItems, sentimentNecessity);
                 break;
 
             case "ADD_TO_ROLLOUT_MENU":
@@ -44,23 +43,21 @@ public class ChefController
                 JSONArray items = jsonRequest.getJSONArray("items");
                 LocalDateTime rolloutDate = LocalDateTime.now();
 
-                for (int itemIndex = 0; itemIndex < numberOfItems; itemIndex++)
-                {
+                for (int itemIndex = 0; itemIndex < numberOfItems; itemIndex++) {
                     JSONObject item = items.getJSONObject(itemIndex);
                     int foodId = item.getInt("foodId");
                     int rolloutID = new Random().nextInt((500 - 200) + 1) + 100;
-                    if(menuService.checkFoodId(foodId))
-                    {
+                    if (menuService.checkFoodId(foodId)) {
                         MenuItem menuItem = menuService.getMenuIteamByFoodId(foodId);
-                        RolloutMenuItem rolloutMenuItem = new RolloutMenuItem(menuItem.getFoodItemID(), menuItem.getName(), rolloutID, rolloutDate);
+                        RolloutMenuItem rolloutMenuItem = new RolloutMenuItem(menuItem.getFoodItemID(),
+                                menuItem.getName(), rolloutID, rolloutDate);
                         rolloutMenuItemList.add(rolloutMenuItem);
-                    }
-                    else {
-                        jsonResponse.put("message",foodId);
+                    } else {
+                        jsonResponse.put("message", foodId);
                     }
                 }
 
-               jsonResponse = chefService.rolloutNewItems(rolloutMenuItemList);
+                jsonResponse = chefService.rolloutNewItems(rolloutMenuItemList);
 
                 break;
 
@@ -73,7 +70,7 @@ public class ChefController
                 break;
 
             case "SEND_NOTIFICATION":
-                String message =jsonRequest.getString("message");
+                String message = jsonRequest.getString("message");
                 jsonResponse = chefService.sendNotification(message);
                 break;
 
@@ -83,7 +80,6 @@ public class ChefController
             case "VIEW_DISCARD_ITEM_FEEDBACK":
                 jsonResponse = chefService.viewDiscardFeedbackMenu();
                 break;
-
 
             default:
                 jsonResponse.put("success", false);

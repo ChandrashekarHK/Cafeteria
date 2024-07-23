@@ -10,7 +10,7 @@ public class DBUserProfileService {
     public boolean saveOrUpdateUserProfile(UserProfile profile) {
         String selectQuery = "SELECT COUNT(*) FROM UserProfile WHERE userId = ?";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement selectStmt = connection.prepareStatement(selectQuery)) {
+                PreparedStatement selectStmt = connection.prepareStatement(selectQuery)) {
             selectStmt.setString(1, profile.getUserId());
             try (ResultSet rs = selectStmt.executeQuery()) {
                 if (rs.next() && rs.getInt(1) > 0) {
@@ -26,7 +26,8 @@ public class DBUserProfileService {
     }
 
     private boolean saveProfile(UserProfile profile, Connection connection) throws SQLException {
-        String insertQuery = "INSERT INTO UserProfile (userId, foodType, spiceLevel, sweetness, saltiness, cuisineType, createdAt) " +
+        String insertQuery = "INSERT INTO UserProfile (userId, foodType, spiceLevel, sweetness, saltiness, cuisineType, createdAt) "
+                +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(insertQuery)) {
             stmt.setString(1, profile.getUserId());
@@ -42,7 +43,8 @@ public class DBUserProfileService {
     }
 
     private boolean updateProfile(UserProfile profile, Connection connection) throws SQLException {
-        String updateQuery = "UPDATE UserProfile SET  foodType = ?, spiceLevel = ?, sweetness = ?, saltiness = ?, cuisineType = ? " +
+        String updateQuery = "UPDATE UserProfile SET  foodType = ?, spiceLevel = ?, sweetness = ?, saltiness = ?, cuisineType = ? "
+                +
                 "WHERE userId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
             stmt.setString(1, profile.getFoodType());
@@ -59,7 +61,7 @@ public class DBUserProfileService {
     public UserProfile getUserProfileByUserId(String userId) {
         String query = "SELECT * FROM UserProfile WHERE userId = ?";
         try (Connection connection = DatabaseConnector.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -70,7 +72,8 @@ public class DBUserProfileService {
                     int saltiness = rs.getInt("saltiness");
                     String cuisineType = rs.getString("cuisineType");
                     LocalDateTime createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
-                    return new UserProfile(profileID, userId,foodType, spiceLevel, sweetness, saltiness, cuisineType, createdAt);
+                    return new UserProfile(profileID, userId, foodType, spiceLevel, sweetness, saltiness, cuisineType,
+                            createdAt);
                 }
             }
         } catch (SQLException e) {

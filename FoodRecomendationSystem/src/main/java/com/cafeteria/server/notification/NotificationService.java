@@ -14,8 +14,7 @@ public class NotificationService {
 
     }
 
-    public List<Notification> viewRecentNotifications()
-    {
+    public List<Notification> viewRecentNotifications() {
         List<Notification> notificationList = dbNotificationService.viewRecentNotifications();
         return notificationList;
     }
